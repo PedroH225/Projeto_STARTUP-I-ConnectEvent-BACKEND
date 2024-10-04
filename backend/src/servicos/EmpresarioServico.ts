@@ -10,7 +10,13 @@ export class EmpresarioServico {
     }
 
     async visualizarTodos() {
-        const empresarios = this.repository.find();
+        const empresarios = await this.repository.find();
         return empresarios;
+    }
+
+    async visualizar(id: number) {
+        const empresario = await this.repository.findOne({where: {id: id}})
+
+        return empresario;
     }
 }

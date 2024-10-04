@@ -14,4 +14,13 @@ export class EmpresarioControlador {
 
         res.json(empresarios);
     }
+
+    async visualizar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const empresario = await this.service.visualizar(idInt);
+
+        res.json(empresario);
+    }
 }
