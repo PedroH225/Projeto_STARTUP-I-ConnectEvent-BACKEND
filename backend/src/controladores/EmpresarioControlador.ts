@@ -23,4 +23,12 @@ export class EmpresarioControlador {
 
         res.json(empresario);
     }
+
+    async criar(req: Request, res: Response) {
+        const {email, senha, nome} = req.body;
+
+        const empresario = await this.service.criar({ email, senha, nome });
+
+        res.json(empresario);
+    }
 }
