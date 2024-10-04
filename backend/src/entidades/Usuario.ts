@@ -1,19 +1,49 @@
+import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 import { Evento } from "./Evento";
 import { Notificacao } from "./Notificacao";
 import { Pessoa } from "./Pessoa";
 
+@Entity("usuario")
 export class Usuario extends Pessoa {
 
+    @Column()
     idade: number;
 
+    @Column()
     genero: string;
 
+    @Column()
     estado: string;
 
+    @Column()
     cidade: string;
 
+    @ManyToMany(() => Evento, evento => evento.participantes)
+    @JoinTable({
+        name:"usuario_evento",
+        joinColumn: {
+            name:"usuario_id",
+            referencedColumnName:"id"
+        },
+        inverseJoinColumn: {
+            name:"evento_id",
+            referencedColumnName:"id"
+        }
+    })
     eventos: Evento[];
 
+    @ManyToMany(() => Notificacao, notificacao => notificacao.usuarios)
+    @JoinTable({
+        name:"notificacao_usuario",
+        joinColumn: {
+            name:"usuario_id",
+            referencedColumnName:"id"
+        },
+        inverseJoinColumn: {
+            name:"notificacao_id",
+            referencedColumnName:"id"
+        }
+    })
     notificacoes: Notificacao[];
 
     constructor(
@@ -32,5 +62,6 @@ export class Usuario extends Pessoa {
         this.cidade = cidade
         this.eventos = eventos;
         this.notificacoes = notificacoes;
+        
     }
 }

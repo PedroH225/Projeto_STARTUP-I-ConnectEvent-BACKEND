@@ -1,15 +1,24 @@
+import { Column, Entity, PrimaryColumn } from "typeorm";
+
+@Entity("endereco")
 export class Endereco {
 
+    @PrimaryColumn()
     id: number;
 
+    @Column()
     local: string;
     
+    @Column()
     estado: string;
 
+    @Column()
     cidade: string;
 
+    @Column()
     bairro: string;
 
+    @Column()
     numero: number;
 
     constructor(id: number, local: string, estado: string, cidade: string, bairro: string, numero: number) {
