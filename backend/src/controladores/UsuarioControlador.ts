@@ -22,4 +22,14 @@ export class UsuarioControlador {
 
         res.json(usuario);
     }
+
+    async criar(req: Request, res: Response) {
+        const { email, senha, nome, idade, genero, estado, cidade } = req.body;
+        const idadeInt = parseInt(idade)
+
+        const result = await this.service.criar({ email, senha, nome, idade: idadeInt, genero, estado, cidade });
+
+        res.status(201).json(result);
+    }
+
 }

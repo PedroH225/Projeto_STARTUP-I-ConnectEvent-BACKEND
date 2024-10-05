@@ -26,7 +26,8 @@ routes.put("/empresario/:id", empresarioControlador.editar.bind(empresarioContro
 routes.delete("/empresario/:id", empresarioControlador.apagar.bind(empresarioControlador));
 
 // Usuário
-routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador))
-routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador))
+routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
+routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
+routes.post("/usuario", usuarioControlador.criar.bind(usuarioControlador));
 
 export { routes };
