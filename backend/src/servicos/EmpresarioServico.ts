@@ -35,7 +35,7 @@ export class EmpresarioServico {
 
         await this.repository.save(empresario);
 
-        return "Empresário criado com sucesso.";
+        return empresario;
     }
 
     async editar({ id, email, senha, nome } : UpdateEmpresarioRequest) {
@@ -51,7 +51,7 @@ export class EmpresarioServico {
 
         await this.repository.save(empresario);
 
-        return "Empresário editado com sucesso.";
+        return empresario;
     }
 
     async apagar(id: number) {
