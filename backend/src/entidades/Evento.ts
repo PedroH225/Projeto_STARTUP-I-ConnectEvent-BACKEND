@@ -42,6 +42,7 @@ export class Evento {
     endereco: Endereco;
 
     @ManyToOne(() => Empresario, (empresario) => empresario.eventos)
+    @JoinColumn({name: "empresario_id"})
     empresario: Empresario;
 
     @ManyToMany(() => Usuario, usuario => usuario.eventos)
