@@ -7,7 +7,7 @@ export const AppDataSource = new DataSource({
     username: "root",
     password: "password",
     database: "connect-event-db",
-    entities: ["src/entities/*.ts"],
+    entities: ["src/entidades/*.ts"],
 
 });
 
