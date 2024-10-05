@@ -32,4 +32,15 @@ export class UsuarioControlador {
         res.status(201).json(result);
     }
 
+    async editar(req: Request, res: Response) {
+        const { id } = req.params
+        const { email, senha, nome, idade, genero, estado, cidade } = req.body;
+        const idadeInt = parseInt(idade)
+        const idInt = parseInt(id);
+
+        const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade });
+
+        res.status(201).json(result);
+    }
+
 }

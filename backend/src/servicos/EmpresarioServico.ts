@@ -31,7 +31,7 @@ export class EmpresarioServico {
 
     async criar({ email, senha, nome }: EmpresarioRequest){
 
-        const empresario = this.repository.create({ email, senha, nome });
+        const empresario = await this.repository.create({ email, senha, nome });
 
         await this.repository.save(empresario);
 
