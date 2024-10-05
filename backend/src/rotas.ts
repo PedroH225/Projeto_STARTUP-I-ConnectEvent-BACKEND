@@ -29,6 +29,6 @@ routes.delete("/empresario/:id", empresarioControlador.apagar.bind(empresarioCon
 routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
 routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
 routes.post("/usuario", usuarioControlador.criar.bind(usuarioControlador));
-routes.put("/usuario/:id", usuarioControlador.editar.bind(usuarioControlador))
-
+routes.put("/usuario/:id", usuarioControlador.editar.bind(usuarioControlador));
+routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador));
 export { routes };

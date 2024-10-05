@@ -55,4 +55,11 @@ export class UsuarioServico {
 
         return usuario;
     }
+
+    async apagar(id: number) {
+        
+        await this.repositorio.delete(id);
+
+        return "Usuário deletado com sucesso.";
+    }
 }
