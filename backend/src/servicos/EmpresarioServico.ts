@@ -24,22 +24,22 @@ export class EmpresarioServico {
     }
 
     async visualizar(id: number) {
-        const empresario = await this.repository.findOne({ where: { id: id } })
+        const empresario = await this.repository.findOne({ where: { id: id } });
 
         return empresario;
     }
 
-    async criar({ email, senha, nome }: EmpresarioRequest): Promise<Error | Empresario> {
+    async criar({ email, senha, nome }: EmpresarioRequest){
 
         const empresario = this.repository.create({ email, senha, nome });
 
         await this.repository.save(empresario);
 
-        return empresario;
+        return "Empresário criado com sucesso.";
     }
 
-    async editar({ id, email, senha, nome } : UpdateEmpresarioRequest): Promise<Error | Empresario> {
-        const empresario = await this.repository.findOne({ where: { id : id }})
+    async editar({ id, email, senha, nome } : UpdateEmpresarioRequest) {
+        const empresario = await this.repository.findOne({ where: { id : id }});
 
         if (!empresario) {
             return new Error("O empresário não existe!")
@@ -51,6 +51,13 @@ export class EmpresarioServico {
 
         await this.repository.save(empresario);
 
-        return empresario;
+        return "Empresário editado com sucesso.";
+    }
+
+    async apagar(id: number) {
+        
+        await this.repository.delete(id);
+
+        return "Empresário apagado com sucesso.";
     }
 }
