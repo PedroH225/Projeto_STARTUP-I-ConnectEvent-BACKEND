@@ -19,5 +19,6 @@ routes.put("/endereco/:id", enderecoControlador.editar.bind(enderecoControlador)
 routes.get("/empresario", empresarioControlador.visualizarTodos.bind(empresarioControlador))
 routes.get("/empresario/:id", empresarioControlador.visualizar.bind(empresarioControlador))
 routes.post("/empresario", empresarioControlador.criar.bind(empresarioControlador));
+routes.put("/empresario/:id", empresarioControlador.editar.bind(empresarioControlador));
 
 export { routes };
