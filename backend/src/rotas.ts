@@ -36,4 +36,6 @@ routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador)
 // Evento
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
+routes.post("/evento", eventoControlador.criar.bind(eventoControlador));
+
 export { routes };
