@@ -17,10 +17,12 @@ type EditarEventoRequest = {
 export class EventoServico {
     private repositorio;
     private fotoRepositorio;
+    private endRepositorio;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Evento);
         this.fotoRepositorio = AppDataSource.getRepository(Foto)
+        this.endRepositorio = AppDataSource.getRepository(Endereco)
     }
 
     async visualizarTodos() {
@@ -92,5 +94,19 @@ export class EventoServico {
         }
 
         return await this.repositorio.findOne({ where: { id: eventodps.id }, relations: ["fotos", "endereco"] });
+    }
+
+    async apagar(id: number) {
+
+        let evento = await this.visualizar(id);
+        if(!evento) {
+            return new Error("Evento não encontrado.");
+        }
+
+        await this.repositorio.delete(id);
+
+        await this.endRepositorio.delete(evento.endereco.id)
+
+        return "Evento deletado com sucesso."
     }
 }

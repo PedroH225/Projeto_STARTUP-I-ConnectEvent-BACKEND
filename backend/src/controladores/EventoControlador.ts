@@ -51,13 +51,24 @@ export class EventoControlador {
         res.status(201).json(result);
     }
 
-    async editar(req: Request, res: Response) : Promise<any> {
+    async editar(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
         const idInt = parseInt(id);
         const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EditarEventoRequest = req.body;
 
-        const result = await this.service.editar({ id : idInt, titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero });
+        const result = await this.service.editar({ id: idInt, titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero });
 
-        res.status(201).json(result);
+        res.status(200).json(result);
+    }
+
+    async apagar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const result = await this.service.apagar(idInt);
+
+        res.status(200).json({
+            mensagem: result
+        })
     }
 }
