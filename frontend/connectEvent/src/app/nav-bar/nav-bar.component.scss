@@ -1,0 +1,22 @@
+.zeroDivNavBar {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(48, 48, 48);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-brand {
+  color: wheat;
+}
+
+.nav-link {
+  color: white;
+}
+
+.teste {
+  border: 1px solid red;
+}
