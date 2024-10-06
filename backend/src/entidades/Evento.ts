@@ -85,7 +85,7 @@ export class Evento {
             telefone: this.telefone,
             livre: this.livre,
             link: this.link,
-            fotos: this.fotos ? this.fotos.map(foto => foto.toJSON()) : [], // Verificação adicionada
+            fotos: this.fotos || [],
             endereco: this.endereco ? this.endereco.toJSON() : null,
             empresario: this.empresario ? this.empresario.toJSON() : null,
             participantes: this.participantes ? this.participantes.map(participante => participante.toJSON()) : [] // Verificação adicionada
