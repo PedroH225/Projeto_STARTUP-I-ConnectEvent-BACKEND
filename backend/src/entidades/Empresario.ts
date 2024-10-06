@@ -15,5 +15,15 @@ export class Empresario extends Pessoa {
         this.senha = senha;
         this.nome = nome;
         this.eventos = eventos;
+        
     }
+
+    toJSON() {
+        return {
+            id: this.id,
+            email: this.email,
+            nome: this.nome
+        };
+    }
+
 }

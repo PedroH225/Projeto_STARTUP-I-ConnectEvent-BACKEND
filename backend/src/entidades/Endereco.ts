@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("endereco")
 export class Endereco {
 
-    @PrimaryColumn()
-    id: number;
+    @PrimaryGeneratedColumn()
+    id !: number;
 
     @Column()
     local: string;
@@ -21,12 +21,22 @@ export class Endereco {
     @Column()
     numero: number;
 
-    constructor(id: number, local: string, estado: string, cidade: string, bairro: string, numero: number) {
-        this.id = id;
+    constructor(local: string, estado: string, cidade: string, bairro: string, numero: number) {
         this.local = local
         this.estado = estado;
         this.cidade = cidade;
         this.bairro = bairro;
         this.numero = numero;
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            local: this.local,
+            estado: this.estado,
+            cidade: this.cidade,
+            bairro: this.bairro,
+            numero: this.numero
+        };
     }
 }
