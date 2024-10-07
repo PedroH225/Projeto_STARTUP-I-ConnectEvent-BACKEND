@@ -1,6 +1,12 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .zeroDivNavBar {
   display: flex;
   flex-direction: column;
+  padding: 1rem;
   background-color: rgb(48, 48, 48);
 }
 
@@ -15,8 +21,4 @@
 
 .nav-link {
   color: white;
-}
-
-.teste {
-  border: 1px solid red;
 }

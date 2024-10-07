@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary mb-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
   <div class="container-fluid zeroDivNavBar">
     <a class="navbar-brand" [routerLink]="'.'">Connect Event</a>
     <button
@@ -37,32 +37,7 @@
             >Register</a
           >
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="'.'" (click)="collapse.toggle()"
-            >Register</a
-          >
-        </li>
-
-        <!-- <p>
-            <button
-              type="button"
-              class="btn btn-outline-primary"
-              (click)="collapse.toggle()"
-              [attr.aria-expanded]="!isCollapsed"
-              aria-controls="collapseExample"
-            >
-              Toggle with Function
-            </button>
-          </p> -->
       </ul>
-      <div class="teste" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-        <div class="card">
-          <div class="card-body">
-            You can collapse this card by clicking one Toggle button
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </nav>
