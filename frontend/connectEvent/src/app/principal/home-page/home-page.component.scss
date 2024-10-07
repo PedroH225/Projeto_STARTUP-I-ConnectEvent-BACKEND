@@ -1,0 +1,43 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.divHomePage {
+  margin: 0;
+  padding: 5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.divCards {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.navbar {
+  background-color: rgb(48, 48, 48);
+  color: wheat;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.tamanhoIcon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.divFiltros {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.zeroDivFiltros {
+  background-color: rgb(48, 48, 48);
+  border: none;
+}

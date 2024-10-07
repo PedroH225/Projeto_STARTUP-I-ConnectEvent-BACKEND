@@ -1,0 +1,37 @@
+<div>
+  <nav class="navbar-expand-lg navbar-light bg-body-tertiary">
+    <div class="">
+      <div class="navbar">
+        <a class="nav-link mb-3" [routerLink]="'.'" (click)="collapse.toggle()"
+          ><img class="tamanhoIcon" src="../../../assets/filtro.png" alt=""
+        /></a>
+        <div class="" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+          <div class="zeroDivFiltros">
+            <div class="divFiltros card-body">
+              <app-filter></app-filter>
+              <app-filter></app-filter>
+              <app-filter></app-filter>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="divHomePage">
+    <div class="divCards">
+      <app-card></app-card>
+      <app-card></app-card>
+      <app-card></app-card>
+    </div>
+    <div class="divCards">
+      <app-card></app-card>
+      <app-card></app-card>
+      <app-card></app-card>
+    </div>
+    <div class="divCards">
+      <app-card></app-card>
+      <app-card></app-card>
+      <app-card></app-card>
+    </div>
+  </div>
+</div>
