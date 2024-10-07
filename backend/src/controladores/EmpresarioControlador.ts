@@ -25,10 +25,30 @@ export class EmpresarioControlador {
     }
 
     async criar(req: Request, res: Response) {
-        const {email, senha, nome} = req.body;
+        const { email, senha, nome } = req.body;
 
-        const empresario = await this.service.criar({ email, senha, nome });
+        const result = await this.service.criar({ email, senha, nome });
 
-        res.json(empresario);
+        res.status(201).json(result);
+    }
+
+    async editar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const { email, senha, nome } = req.body;
+
+        const result = await this.service.editar({ id: idInt, email, senha, nome })
+
+        res.status(200).json(result);
+    }
+
+    async apagar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const result = await this.service.apagar(idInt);
+        
+        res.status(200).json({mensagem: result})
     }
 }

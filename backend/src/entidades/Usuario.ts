@@ -64,4 +64,17 @@ export class Usuario extends Pessoa {
         this.notificacoes = notificacoes;
         
     }
+
+    toJSON() {
+        return {
+            id: this.id,
+            email: this.email,
+            senha: this.senha,
+            nome: this.nome,
+            idade: this.idade,
+            genero: this.genero,
+            estado: this.estado,
+            cidade: this.cidade
+        };
+    }
 }

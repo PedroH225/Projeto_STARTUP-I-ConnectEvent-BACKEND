@@ -8,7 +8,7 @@ import { Usuario } from "./Usuario";
 export class Evento {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
     titulo: string;
@@ -34,37 +34,36 @@ export class Evento {
     @Column()
     link: string;
 
-    @OneToMany(() => Foto, (foto) => foto.evento)
-    fotos: Foto[];
+    @OneToMany(() => Foto, (foto) => foto.evento, { cascade: true })
+    fotos!: Foto[];
 
-    @OneToOne(() => Endereco)
-    @JoinColumn({name: "endereco_id"})
-    endereco: Endereco;
+    @OneToOne(() => Endereco, { cascade: true })
+    @JoinColumn({ name: "endereco_id" })
+    endereco!: Endereco;
 
     @ManyToOne(() => Empresario, (empresario) => empresario.eventos)
-    empresario: Empresario;
+    @JoinColumn({ name: "empresario_id" })
+    empresario!: Empresario;
 
     @ManyToMany(() => Usuario, usuario => usuario.eventos)
     @JoinTable({
-        name:"usuario_evento",
+        name: "usuario_evento",
         joinColumn: {
-            name:"evento_id",
-            referencedColumnName:"id"
+            name: "evento_id",
+            referencedColumnName: "id"
         },
         inverseJoinColumn: {
-            name:"usuario_id",
-            referencedColumnName:"id"
+            name: "usuario_id",
+            referencedColumnName: "id"
         }
     })
-    participantes: Usuario[]
+    participantes!: Usuario[]
 
     constructor(
-        id: number, titulo: string, descricao: string, data: Date,
-        horario: string, tipo: string, telefone: string, livre: boolean, 
-        link: string, fotos: Foto[], endereco: Endereco, empresario: Empresario,
-        participantes: Usuario[]
+        titulo: string, descricao: string, data: Date,
+        horario: string, tipo: string, telefone: string, livre: boolean,
+        link: string
     ) {
-        this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.data = data;
@@ -73,9 +72,23 @@ export class Evento {
         this.telefone = telefone;
         this.livre = livre;
         this.link = link;
-        this.fotos = fotos;
-        this.endereco = endereco;
-        this.empresario = empresario;
-        this.participantes = participantes;
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            titulo: this.titulo,
+            descricao: this.descricao,
+            data: this.data,
+            horario: this.horario,
+            tipo: this.tipo,
+            telefone: this.telefone,
+            livre: this.livre,
+            link: this.link,
+            fotos: this.fotos || [],
+            endereco: this.endereco ? this.endereco.toJSON() : null,
+            empresario: this.empresario ? this.empresario.toJSON() : null,
+            participantes: this.participantes ? this.participantes.map(participante => participante.toJSON()) : [] // Verificação adicionada
+        };
     }
 }
