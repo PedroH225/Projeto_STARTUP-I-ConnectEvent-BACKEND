@@ -8,6 +8,11 @@ type EventoRequest = {
     link: string, fotos: string[], local: string, estado: string, cidade: string, bairro: string, numero: number, empresarioId: number
 }
 
+type EditarEventoRequest = {
+    titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
+    link: string, fotos: any[], local: string, estado: string, cidade: string, bairro: string, numero: number
+}
+
 export class EventoControlador {
     private service: EventoServico;
     private empresarioServico: EmpresarioServico;
@@ -44,5 +49,26 @@ export class EventoControlador {
         const result = await this.service.criar({ titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, empresario });
 
         res.status(201).json(result);
+    }
+
+    async editar(req: Request, res: Response): Promise<any> {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+        const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EditarEventoRequest = req.body;
+
+        const result = await this.service.editar({ id: idInt, titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero });
+
+        res.status(200).json(result);
+    }
+
+    async apagar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const result = await this.service.apagar(idInt);
+
+        res.status(200).json({
+            mensagem: result
+        })
     }
 }

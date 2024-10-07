@@ -3,7 +3,7 @@ import { Evento } from "./Evento";
 
 @Entity("foto")
 export class Foto {
-    
+
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -11,13 +11,13 @@ export class Foto {
     foto: string;
 
     @ManyToOne(() => Evento, (evento) => evento.fotos)
-    @JoinColumn({name: "evento_id"})
-    evento : Evento;
+    @JoinColumn({ name: "evento_id" })
+    evento: Evento;
 
     constructor(foto: string, evento: Evento) {
         this.foto = foto;
         this.evento = evento
-        
+
     }
 
     toJSON() {
