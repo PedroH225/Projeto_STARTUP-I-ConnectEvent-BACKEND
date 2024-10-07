@@ -68,6 +68,9 @@ export class Usuario extends Pessoa {
     toJSON() {
         return {
             id: this.id,
+            email: this.email,
+            senha: this.senha,
+            nome: this.nome,
             idade: this.idade,
             genero: this.genero,
             estado: this.estado,

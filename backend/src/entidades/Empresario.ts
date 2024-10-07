@@ -22,7 +22,9 @@ export class Empresario extends Pessoa {
         return {
             id: this.id,
             email: this.email,
-            nome: this.nome
+            nome: this.nome,
+            senha: this.senha,
+            
         };
     }
 
