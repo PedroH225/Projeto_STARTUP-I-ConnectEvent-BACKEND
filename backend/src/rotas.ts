@@ -38,5 +38,6 @@ routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
 routes.post("/evento", eventoControlador.criar.bind(eventoControlador));
 routes.put("/evento/:id", eventoControlador.editar.bind(eventoControlador));
 routes.delete("/evento/:id", eventoControlador.apagar.bind(eventoControlador))
+routes.get("/filtrar", eventoControlador.filtrar.bind(eventoControlador))
 
 export { routes };
