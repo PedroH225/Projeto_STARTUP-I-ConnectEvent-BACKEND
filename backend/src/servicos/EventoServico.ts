@@ -1,3 +1,4 @@
+import { Like, MoreThanOrEqual } from "typeorm";
 import { AppDataSource } from "../bd";
 import { Empresario } from "../entidades/Empresario";
 import { Endereco } from "../entidades/Endereco";
@@ -34,6 +35,33 @@ export class EventoServico {
         const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["endereco", "fotos", "empresario"] });
 
         return evento;
+    }
+
+    async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
+        const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
+
+    if (titulo) {
+        whereConditions.titulo = Like(`%${titulo}%`)
+    }
+    if (tipo) {
+        whereConditions.tipo = tipo; // Adiciona a condição de tipo se estiver presente
+    }
+
+    if (data) {
+        whereConditions.data = MoreThanOrEqual(data); // Adiciona a condição de data se estiver presente
+    }
+
+    if (cidade) {
+        whereConditions.endereco = { cidade: cidade }; // Adiciona a condição de cidade se estiver presente
+    }
+
+    const resultArray = await this.repositorio.find({
+        where: whereConditions,
+        relations: ["endereco"]
+    });
+
+    return resultArray;
+
     }
 
     async criar({ titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, empresario }: EventoRequest) {

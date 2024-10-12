@@ -37,6 +37,18 @@ export class EventoControlador {
         res.json(evento);
     }
 
+    async filtrar(req: Request, res: Response) {
+        const titulo = req.query.titulo as string;
+        const tipo = req.query.tipo as string;
+        const data = req.query.data ? new Date(req.query.data as string) : undefined;
+        const cidade = req.query.cidade as string;
+
+        const evento = await this.service.filtrar(titulo, tipo, data, cidade)
+
+        res.json(evento)
+    }
+
+
     async criar(req: Request, res: Response): Promise<any> {
         const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, empresarioId }: EventoRequest = req.body;
 
