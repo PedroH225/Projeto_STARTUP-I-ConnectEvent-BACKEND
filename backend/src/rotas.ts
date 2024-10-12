@@ -18,6 +18,7 @@ routes.post("/endereco", enderecoControlador.criar.bind(enderecoControlador));
 routes.get("/endereco", enderecoControlador.visualizarTodos.bind(enderecoControlador));
 routes.delete("/endereco/:id", enderecoControlador.deletar.bind(enderecoControlador));
 routes.put("/endereco/:id", enderecoControlador.editar.bind(enderecoControlador));
+routes.get("/cidades", enderecoControlador.visualizarCidades.bind(enderecoControlador))
 
 
 // Empresário
