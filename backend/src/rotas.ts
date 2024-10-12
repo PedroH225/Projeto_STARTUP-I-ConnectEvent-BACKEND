@@ -3,6 +3,7 @@ import { EnderecoControlador } from './controladores/EnderecoControlador';
 import { EmpresarioControlador } from './controladores/EmpresarioControlador';
 import { UsuarioControlador } from './controladores/UsuarioControlador';
 import { EventoControlador } from './controladores/EventoControlador';
+import { TipoControlador } from './controladores/TipoControlador';
 
 const routes = Router();
 
@@ -10,6 +11,7 @@ const enderecoControlador = new EnderecoControlador();
 const empresarioControlador = new EmpresarioControlador();
 const usuarioControlador = new UsuarioControlador()
 const eventoControlador = new EventoControlador()
+const tipoControlador = new TipoControlador();
 
 // Endereço
 routes.post("/endereco", enderecoControlador.criar.bind(enderecoControlador));
@@ -39,5 +41,9 @@ routes.post("/evento", eventoControlador.criar.bind(eventoControlador));
 routes.put("/evento/:id", eventoControlador.editar.bind(eventoControlador));
 routes.delete("/evento/:id", eventoControlador.apagar.bind(eventoControlador))
 routes.get("/filtrar", eventoControlador.filtrar.bind(eventoControlador))
+
+// Tipos
+routes.get("/tipo", tipoControlador.visualizarTodos.bind(tipoControlador))
+
 
 export { routes };
