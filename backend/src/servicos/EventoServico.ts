@@ -4,7 +4,7 @@ import { Empresario } from "../entidades/Empresario";
 import { Endereco } from "../entidades/Endereco";
 import { Evento } from "../entidades/Evento";
 import { Foto } from "../entidades/Foto";
-import { FormatadorDeData } from '../utils/FormatadorDeData';
+import { Formatador } from '../utils/FormatadorDeData';
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
@@ -30,9 +30,10 @@ export class EventoServico {
     async visualizarTodos() {
         const eventos = await this.repositorio.find({ relations: ["endereco", "fotos"] });
         
-        const eventosFormatados = eventos.map(data => ({
-            ...data,
-            data: FormatadorDeData.formatDate(data.data), // Usando a classe importada
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
         }));
         
         return eventosFormatados;
@@ -47,7 +48,8 @@ export class EventoServico {
 
         const eventoFormatado = {
             ...evento,
-            data: FormatadorDeData.formatDate(evento.data), // Formata a data
+            data: Formatador.formatDate(evento.data), // Formata a data
+            horario: Formatador.formatarHorario(evento.horario)
         };
         
         return eventoFormatado; // Retorna o evento formatado
