@@ -4,6 +4,7 @@ import { Empresario } from "../entidades/Empresario";
 import { Endereco } from "../entidades/Endereco";
 import { Evento } from "../entidades/Evento";
 import { Foto } from "../entidades/Foto";
+import { FormatadorDeData } from '../utils/FormatadorDeData';
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
@@ -28,13 +29,28 @@ export class EventoServico {
 
     async visualizarTodos() {
         const eventos = await this.repositorio.find({ relations: ["endereco", "fotos"] });
-        return eventos;
+        
+        const eventosFormatados = eventos.map(data => ({
+            ...data,
+            data: FormatadorDeData.formatDate(data.data), // Usando a classe importada
+        }));
+        
+        return eventosFormatados;
     }
 
     async visualizar(id: number) {
         const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["endereco", "fotos", "empresario"] });
 
-        return evento;
+        if (!evento) {
+            throw new Error("Evento não encontrado!")
+        }
+
+        const eventoFormatado = {
+            ...evento,
+            data: FormatadorDeData.formatDate(evento.data), // Formata a data
+        };
+        
+        return eventoFormatado; // Retorna o evento formatado
     }
 
     async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
