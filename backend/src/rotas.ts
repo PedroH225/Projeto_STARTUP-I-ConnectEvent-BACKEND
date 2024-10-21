@@ -48,4 +48,6 @@ routes.delete("/evento/:id", eventoControlador.apagar.bind(eventoControlador))
 routes.get("/tipo", tipoControlador.visualizarTodos.bind(tipoControlador))
 
 
+routes.get("/validar", empresarioControlador.validar.bind(empresarioControlador))
+
 export { routes };
