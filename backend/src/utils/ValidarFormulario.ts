@@ -125,14 +125,15 @@ export class ValidarFormulario {
 
         const regexTelefoneFixo = /^\(\d{2}\) \d{4}-\d{4}$/;
         const regexCelular = /^\(\d{2}\) 9\d{4}-\d{4}$/;
-        const regexLink = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/
+        const regexLink = /^(https?:\/\/)?(www\.)?([\w-]+(\.[\w-]+)+(\.(com|org|net|br|info|edu|co\.br|gov|com\.br)))?(\/[\w-.,@?^=%&:\/~+#]*)?$/;
+
 
         if (!regexTelefoneFixo.test(evento.telefone) && !regexCelular.test(evento.telefone)) {
             erros.push(new FormErro("telefone", "Número de telefone inválido. Use um formato de telefone fixo ou celular válido."));
         }
 
         if (!regexLink.test(evento.link)) {
-            erros.push(new FormErro("link", "Link inválido."));
+            erros.push(new FormErro("link", "Link inválido. Exemplo: 'www.exemplo.com'"));
         }
 
         if (erros.length > 0) {

@@ -5,6 +5,7 @@ import { Endereco } from "../entidades/Endereco";
 import { Evento } from "../entidades/Evento";
 import { Foto } from "../entidades/Foto";
 import { Formatador } from '../utils/FormatadorDeData';
+import { ValidarFormulario } from "../utils/ValidarFormulario";
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
@@ -97,6 +98,8 @@ export class EventoServico {
             await this.fotoRepositorio.save(foto);
         }
 
+        await ValidarFormulario.evento(evento);
+
         return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] })
     }
 
@@ -128,8 +131,6 @@ export class EventoServico {
 
         let eventodps = await this.repositorio.save(evento);
 
-        console.log(eventodps);
-
         for (const foto of evento.fotos) {
             await this.fotoRepositorio.remove(foto);
         }
@@ -138,6 +139,8 @@ export class EventoServico {
             let foto = new Foto(tempFoto.foto, evento);
             await this.fotoRepositorio.save(foto);
         }
+
+        await ValidarFormulario.evento(evento);
 
         return await this.repositorio.findOne({ where: { id: eventodps.id }, relations: ["fotos", "endereco"] });
     }
