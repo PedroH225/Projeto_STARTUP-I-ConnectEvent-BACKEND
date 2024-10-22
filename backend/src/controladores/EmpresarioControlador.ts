@@ -59,7 +59,7 @@ export class EmpresarioControlador {
         const eventos: Evento[] = [];
         try {
 
-        ValidarFormulario.empresario(new Empresario(10, "emailgmail.com", "senha3", "Pedro", eventos));
+        await ValidarFormulario.empresario(new Empresario(10, "email@email.com", "Senha3@a", "pedro", eventos));
 
         res.json("De boa!");
         } catch (erros) {
