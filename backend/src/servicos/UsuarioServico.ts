@@ -1,5 +1,6 @@
 import { AppDataSource } from "../bd";
 import { Usuario } from "../entidades/Usuario";
+import { ValidarFormulario } from "../utils/ValidarFormulario";
 
 type UsuarioRequest = {
     email: string, senha: string, nome: string, idade: number, genero: string, estado: string, cidade: string;
@@ -31,6 +32,8 @@ export class UsuarioServico {
 
         const usuario = await this.repositorio.create({ email, senha, nome, idade, genero, estado, cidade });
 
+        await ValidarFormulario.usuario(usuario)
+
         await this.repositorio.save(usuario);
 
         return usuario;
@@ -50,6 +53,8 @@ export class UsuarioServico {
         usuario.genero = genero ? genero : usuario.genero;
         usuario.estado = estado ? estado : usuario.estado;
         usuario.cidade = cidade ? cidade : usuario.cidade;
+
+        await ValidarFormulario.usuario(usuario)
 
         await this.repositorio.save(usuario);
 
