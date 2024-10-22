@@ -1,16 +1,12 @@
-import { DataSource, Not, Repository } from "typeorm";
-import { Empresario } from "../entidades/Empresario";
+import { Not } from "typeorm";
 import { AppDataSource } from "../bd";
+import { Empresario } from "../entidades/Empresario";
 import { FormErro } from "../entidades/FormErro";
-import e from "express";
 
 export class ValidarFormulario {
     static async empresario (empresario : Empresario) {
         const repository = AppDataSource.getRepository(Empresario)
         const erros : FormErro[] = []
-        
-        const splitArroba = empresario.email.split("@");
-        const splitPonto = empresario.email.split(".")
 
         // Verificação se o empresário já existe
         const whereCondition = empresario.id ? 
@@ -18,8 +14,6 @@ export class ValidarFormulario {
             { email: empresario.email };
         
         const emailExistente = await repository.findOne({ where: whereCondition });
-
-        console.log(emailExistente);
         
 
         if (empresario.nome.trim() === "") {
