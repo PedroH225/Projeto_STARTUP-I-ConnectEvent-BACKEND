@@ -3,6 +3,7 @@ import { AppDataSource } from "../bd";
 import { Empresario } from "../entidades/Empresario";
 import { FormErro } from "../entidades/FormErro";
 import { Usuario } from "../entidades/Usuario";
+import { Evento } from "../entidades/Evento";
 
 export class ValidarFormulario {
     static async empresario (empresario : Empresario) {
@@ -52,7 +53,7 @@ export class ValidarFormulario {
         }
 }
 
-static async usuario(usuario: Usuario) {
+    static async usuario(usuario: Usuario) {
     const repository = AppDataSource.getRepository(Usuario); // Certifique-se de que a classe está correta
     const erros: FormErro[] = [];
 
@@ -98,4 +99,45 @@ static async usuario(usuario: Usuario) {
     }
 }
 
+    static async evento(evento : Evento) {
+        const erros : FormErro[] = [];
+
+
+        if(evento.titulo.trim() === "") {
+            erros.push(new FormErro("titulo", "Campo obrigatório."))
+        }
+
+        if(evento.descricao.trim() === "") {
+            erros.push(new FormErro("descricao", "Campo obrigatório."))
+        }
+
+        if(evento.link.trim() === "") {
+            erros.push(new FormErro("link", "Campo obrigatório."))
+        }
+
+        if(evento.telefone.trim() === "") {
+            erros.push(new FormErro("telefone", "Campo obrigatório."))
+        }
+
+        if (erros.length > 0) {
+            throw erros;
+        }
+
+        const regexTelefoneFixo = /^\(\d{2}\) \d{4}-\d{4}$/;
+        const regexCelular = /^\(\d{2}\) 9\d{4}-\d{4}$/;
+        const regexLink = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/
+
+        if (!regexTelefoneFixo.test(evento.telefone) && !regexCelular.test(evento.telefone)) {
+            erros.push(new FormErro("telefone", "Número de telefone inválido. Use um formato de telefone fixo ou celular válido."));
+        }
+
+        if (!regexLink.test(evento.link)) {
+            erros.push(new FormErro("link", "Link inválido."));
+        }
+
+        if (erros.length > 0) {
+            throw erros;
+        }
+
+    }
 }
