@@ -19,7 +19,8 @@ export class ValidarFormulario {
         
         const emailExistente = await repository.findOne({ where: whereCondition });
 
-
+        console.log(emailExistente);
+        
 
         if (empresario.nome.trim() === "") {
             erros.push(new FormErro("nome", "Campo obrigatório."));

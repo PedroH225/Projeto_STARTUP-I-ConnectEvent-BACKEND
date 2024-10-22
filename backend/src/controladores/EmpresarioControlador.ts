@@ -30,9 +30,14 @@ export class EmpresarioControlador {
     async criar(req: Request, res: Response) {
         const { email, senha, nome } = req.body;
 
+        try {
         const result = await this.service.criar({ email, senha, nome });
 
         res.status(201).json(result);
+
+        } catch (erros) {
+            res.json(erros)
+        }
     }
 
     async editar(req: Request, res: Response) {
@@ -41,9 +46,14 @@ export class EmpresarioControlador {
 
         const { email, senha, nome } = req.body;
 
+        try {
         const result = await this.service.editar({ id: idInt, email, senha, nome })
 
         res.status(200).json(result);
+
+        } catch (erros) {
+            res.json(erros)
+        }
     }
 
     async apagar(req: Request, res: Response) {

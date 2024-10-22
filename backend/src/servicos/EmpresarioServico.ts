@@ -1,6 +1,7 @@
 import { AppDataSource } from "../bd";
 import { Empresario } from "../entidades/Empresario";
 import { Evento } from "../entidades/Evento";
+import { ValidarFormulario } from "../utils/ValidarFormulario";
 
 type EmpresarioRequest = {
     email: string, senha: string, nome: string;
@@ -33,6 +34,8 @@ export class EmpresarioServico {
 
         const empresario = await this.repository.create({ email, senha, nome });
 
+        await ValidarFormulario.empresario(empresario)
+
         await this.repository.save(empresario);
 
         return empresario;
@@ -45,9 +48,12 @@ export class EmpresarioServico {
             return new Error("O empresário não existe!")
         }
 
+
         empresario.email = email ? email : empresario.email;
         empresario.senha = senha ? senha : empresario.senha;
         empresario.nome = nome ? nome : empresario.nome;
+
+        await ValidarFormulario.empresario(empresario)
 
         await this.repository.save(empresario);
 
