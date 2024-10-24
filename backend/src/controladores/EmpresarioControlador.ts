@@ -69,9 +69,9 @@ export class EmpresarioControlador {
         const {email, senha} = req.body;
 
         try {
-        const result = await this.service.validar({email, senha});
+        const token = await this.service.validar({email, senha});
 
-        res.json(result)
+        res.json({ token })
         } catch (erro : Error | any) {
             res.json(erro.message)
         }

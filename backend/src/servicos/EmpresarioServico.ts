@@ -1,6 +1,6 @@
 import { AppDataSource } from "../bd";
 import { Empresario } from "../entidades/Empresario";
-import { Evento } from "../entidades/Evento";
+import jwt from 'jsonwebtoken';
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 
 type EmpresarioRequest = {
@@ -75,7 +75,12 @@ export class EmpresarioServico {
         const empresario = await this.repository.findOne({ where: { email : email, senha : senha } })
 
         if (empresario) {
-            return "Empresário encontrado!";
+
+            const token = jwt.sign({ id: empresario.id }, process.env.JWT_SECRET as string, {
+                expiresIn: '1h' // Token expira em 1 hora
+            });
+
+            return token;
         } else {
             throw new Error("Usuário ou senha incorretos")
         }
