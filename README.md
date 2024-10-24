@@ -13,11 +13,13 @@ Para executar o backend do projeto, é necessário a instalação de: NodeJS, NP
    git init
    git clone git@github.com:VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-BACKEND.git
    cd ./backend/
+  ```
 
 2. **Instale as dependências**:
   - No mesmo terminal, execute:
    ```bash
    npm install
+   ```
    
 3. **Configure as variáveis de ambiente**:
   - No diretório `./backend/`, crie o arquivo `.env`.
@@ -38,6 +40,7 @@ Para executar o backend do projeto, é necessário a instalação de: NodeJS, NP
   
    ```bash
    npm run dev
+   ```
 
 6. **Execute o frontend**:
   - Siga as instruções de execução do frontend:
