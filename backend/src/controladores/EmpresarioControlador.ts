@@ -65,6 +65,18 @@ export class EmpresarioControlador {
         res.status(200).json({mensagem: result})
     }
 
+    async realizarAcesso(req: Request, res: Response) {
+        const {email, senha} = req.body;
+
+        try {
+        const result = await this.service.validar({email, senha});
+
+        res.json(result)
+        } catch (erro : Error | any) {
+            res.json(erro.message)
+        }
+    }
+
     async validar(req: Request, res: Response) {
         const eventos: Evento[] = [];
         try {
