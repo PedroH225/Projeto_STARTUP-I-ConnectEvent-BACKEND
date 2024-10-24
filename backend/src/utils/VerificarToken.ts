@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-export function verificarToken(req: Request, res: Response, next: NextFunction) {
+export function verificarToken(req: Request, res: Response, next: NextFunction) : any  {
     const token = req.headers['authorization']?.split(' ')[1];
 
     if (!token) {
@@ -19,6 +19,3 @@ export function verificarToken(req: Request, res: Response, next: NextFunction) 
         next(); 
     });
 }
-
-
-module.exports = verificarToken;

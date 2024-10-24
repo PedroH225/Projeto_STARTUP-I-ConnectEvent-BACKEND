@@ -4,6 +4,7 @@ import { EmpresarioControlador } from './controladores/EmpresarioControlador';
 import { UsuarioControlador } from './controladores/UsuarioControlador';
 import { EventoControlador } from './controladores/EventoControlador';
 import { TipoControlador } from './controladores/TipoControlador';
+import { verificarToken } from './utils/verificarToken';
 
 const routes = Router();
 
@@ -50,5 +51,6 @@ routes.get("/tipo", tipoControlador.visualizarTodos.bind(tipoControlador))
 
 
 routes.get("/validar", empresarioControlador.validar.bind(empresarioControlador))
+routes.get("/testartoken", verificarToken, empresarioControlador.testarToken.bind(empresarioControlador))
 
 export { routes };
