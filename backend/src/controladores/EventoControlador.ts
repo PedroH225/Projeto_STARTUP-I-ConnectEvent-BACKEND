@@ -58,9 +58,13 @@ export class EventoControlador {
             return res.status(404).json({ message: "Empresário não encontrado." });
         }
 
+        try {
         const result = await this.service.criar({ titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, empresario });
 
         res.status(201).json(result);
+        } catch (erros) {
+            res.json(erros);
+        }
     }
 
     async editar(req: Request, res: Response): Promise<any> {
@@ -68,9 +72,13 @@ export class EventoControlador {
         const idInt = parseInt(id);
         const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EditarEventoRequest = req.body;
 
+        try {
         const result = await this.service.editar({ id: idInt, titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero });
 
         res.status(200).json(result);
+        } catch (erros) {
+            res.json(erros)
+        }
     }
 
     async apagar(req: Request, res: Response) {

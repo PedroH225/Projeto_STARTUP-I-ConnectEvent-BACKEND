@@ -1,5 +1,5 @@
 import { UsuarioServico } from "../servicos/UsuarioServico";
-import { Request, Response } from "express";
+import { json, Request, Response } from "express";
 
 export class UsuarioControlador {
     private service;
@@ -27,9 +27,13 @@ export class UsuarioControlador {
         const { email, senha, nome, idade, genero, estado, cidade } = req.body;
         const idadeInt = parseInt(idade)
 
+        try {
         const result = await this.service.criar({ email, senha, nome, idade: idadeInt, genero, estado, cidade });
 
         res.status(201).json(result);
+        } catch (erros) {
+            res.json(erros);
+        }
     }
 
     async editar(req: Request, res: Response) {
@@ -38,9 +42,13 @@ export class UsuarioControlador {
         const idadeInt = parseInt(idade)
         const idInt = parseInt(id);
 
+        try {
         const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade });
 
         res.status(200).json(result);
+        } catch (erros) {
+            res.json(erros)
+        }
     }
 
     async apagar(req: Request, res: Response) {

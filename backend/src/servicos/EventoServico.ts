@@ -4,6 +4,8 @@ import { Empresario } from "../entidades/Empresario";
 import { Endereco } from "../entidades/Endereco";
 import { Evento } from "../entidades/Evento";
 import { Foto } from "../entidades/Foto";
+import { Formatador } from '../utils/FormatadorDeData';
+import { ValidarFormulario } from "../utils/ValidarFormulario";
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
@@ -28,13 +30,30 @@ export class EventoServico {
 
     async visualizarTodos() {
         const eventos = await this.repositorio.find({ relations: ["endereco", "fotos"] });
-        return eventos;
+        
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
     }
 
     async visualizar(id: number) {
         const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["endereco", "fotos", "empresario"] });
 
-        return evento;
+        if (!evento) {
+            throw new Error("Evento não encontrado!")
+        }
+
+        const eventoFormatado = {
+            ...evento,
+            data: Formatador.formatDate(evento.data), // Formata a data
+            horario: Formatador.formatarHorario(evento.horario)
+        };
+        
+        return eventoFormatado; // Retorna o evento formatado
     }
 
     async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
@@ -79,6 +98,8 @@ export class EventoServico {
             await this.fotoRepositorio.save(foto);
         }
 
+        await ValidarFormulario.evento(evento);
+
         return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] })
     }
 
@@ -110,8 +131,6 @@ export class EventoServico {
 
         let eventodps = await this.repositorio.save(evento);
 
-        console.log(eventodps);
-
         for (const foto of evento.fotos) {
             await this.fotoRepositorio.remove(foto);
         }
@@ -120,6 +139,8 @@ export class EventoServico {
             let foto = new Foto(tempFoto.foto, evento);
             await this.fotoRepositorio.save(foto);
         }
+
+        await ValidarFormulario.evento(evento);
 
         return await this.repositorio.findOne({ where: { id: eventodps.id }, relations: ["fotos", "endereco"] });
     }

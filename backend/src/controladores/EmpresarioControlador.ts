@@ -1,6 +1,9 @@
 import { AppDataSource } from "../bd";
 import { EmpresarioServico } from "../servicos/EmpresarioServico";
 import { Request, Response } from "express";
+import { ValidarFormulario } from "../utils/ValidarFormulario";
+import { Empresario } from "../entidades/Empresario";
+import { Evento } from "../entidades/Evento";
 
 export class EmpresarioControlador {
     private service;
@@ -27,9 +30,14 @@ export class EmpresarioControlador {
     async criar(req: Request, res: Response) {
         const { email, senha, nome } = req.body;
 
+        try {
         const result = await this.service.criar({ email, senha, nome });
 
         res.status(201).json(result);
+
+        } catch (erros) {
+            res.json(erros)
+        }
     }
 
     async editar(req: Request, res: Response) {
@@ -38,9 +46,14 @@ export class EmpresarioControlador {
 
         const { email, senha, nome } = req.body;
 
+        try {
         const result = await this.service.editar({ id: idInt, email, senha, nome })
 
         res.status(200).json(result);
+
+        } catch (erros) {
+            res.json(erros)
+        }
     }
 
     async apagar(req: Request, res: Response) {
@@ -51,4 +64,16 @@ export class EmpresarioControlador {
         
         res.status(200).json({mensagem: result})
     }
+
+    async validar(req: Request, res: Response) {
+        const eventos: Evento[] = [];
+        try {
+
+        await ValidarFormulario.empresario(new Empresario(10, "email@email.com", "Senha3@a", "pedro", eventos));
+
+        res.json("De boa!");
+        } catch (erros) {
+            res.json(erros)
+        }
+}
 }
