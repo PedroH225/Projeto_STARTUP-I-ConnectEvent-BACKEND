@@ -1,4 +1,4 @@
-# ConnectEvent
+# ConnectEvent Backend
 
 ## Descrição
 A ConnectEvent é uma plataforma digital que possui a finalidade de conectar as pessoas (consumidores) aos eventos de empresários e organizadores.
@@ -8,19 +8,20 @@ Para executar o backend do projeto, é necessário a instalação de: NodeJS, NP
 [Link para o script do banco de dados](https://github.com/VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-DOC-DB/tree/main/Banco%20de%20Dados)
 
 1. **Clone o repositório**:
-   - Abra o terminal do GitBash no diretório desejado e digite os comandos:
+  - Abra o terminal do GitBash no diretório desejado e digite os comandos:
    ```bash
    git init
    git clone git@github.com:VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-BACKEND.git
    cd ./backend/
 
 2. **Instale as dependências**:
+  - No mesmo terminal, execute:
    ```bash
    npm install
    
 3. **Configure as variáveis de ambiente**:
-   - No diretório `./backend/`, crie o arquivo `.env`.
-   - Configure as variáveis de ambiente de acordo com o seu banco de dados. Um exemplo de configuração é:
+  - No diretório `./backend/`, crie o arquivo `.env`.
+  - Configure as variáveis de ambiente de acordo com o seu banco de dados. Um exemplo de configuração é:
 
      ```env
      DB_HOST=SEU_HOST
@@ -32,8 +33,9 @@ Para executar o backend do projeto, é necessário a instalação de: NodeJS, NP
      JWT_SECRET=minha_chave_secreta_123
      ```
 
-4. **Execute o projeto**
-  -No diretório `./backend/`, execute o comando:
+4. **Execute o projeto**:
+  - No terminal do diretório `./backend/`, execute o comando:
+  
    ```bash
    npm run dev
 
