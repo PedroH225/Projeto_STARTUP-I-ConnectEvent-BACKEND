@@ -1,6 +1,6 @@
 import { AppDataSource } from "../bd";
 import { Empresario } from "../entidades/Empresario";
-import { Evento } from "../entidades/Evento";
+import jwt from 'jsonwebtoken';
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 
 type EmpresarioRequest = {
@@ -9,6 +9,10 @@ type EmpresarioRequest = {
 
 type UpdateEmpresarioRequest = {
     id: number; email: string, senha: string, nome: string;
+}
+
+type LoginRequest = {
+    email: string; senha: string;
 }
 
 export class EmpresarioServico {
@@ -30,7 +34,7 @@ export class EmpresarioServico {
         return empresario;
     }
 
-    async criar({ email, senha, nome }: EmpresarioRequest){
+    async criar({ email, senha, nome }: EmpresarioRequest) {
 
         const empresario = await this.repository.create({ email, senha, nome });
 
@@ -41,8 +45,8 @@ export class EmpresarioServico {
         return empresario;
     }
 
-    async editar({ id, email, senha, nome } : UpdateEmpresarioRequest) {
-        const empresario = await this.repository.findOne({ where: { id : id }});
+    async editar({ id, email, senha, nome }: UpdateEmpresarioRequest) {
+        const empresario = await this.repository.findOne({ where: { id: id } });
 
         if (!empresario) {
             return new Error("O empresário não existe!")
@@ -61,9 +65,24 @@ export class EmpresarioServico {
     }
 
     async apagar(id: number) {
-        
+
         await this.repository.delete(id);
 
         return "Empresário apagado com sucesso.";
+    }
+
+    async validar({ email, senha }: LoginRequest) {
+        const empresario = await this.repository.findOne({ where: { email : email, senha : senha } })
+
+        if (empresario) {
+
+            const token = jwt.sign({ id: empresario.id }, process.env.JWT_SECRET as string, {
+                expiresIn: '1h' // Token expira em 1 hora
+            });
+
+            return token;
+        } else {
+            throw new Error("Usuário ou senha incorretos")
+        }
     }
 }

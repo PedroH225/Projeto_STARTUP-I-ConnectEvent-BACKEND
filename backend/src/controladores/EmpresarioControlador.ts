@@ -31,9 +31,9 @@ export class EmpresarioControlador {
         const { email, senha, nome } = req.body;
 
         try {
-        const result = await this.service.criar({ email, senha, nome });
+            const result = await this.service.criar({ email, senha, nome });
 
-        res.status(201).json(result);
+            res.status(201).json(result);
 
         } catch (erros) {
             res.json(erros)
@@ -47,9 +47,9 @@ export class EmpresarioControlador {
         const { email, senha, nome } = req.body;
 
         try {
-        const result = await this.service.editar({ id: idInt, email, senha, nome })
+            const result = await this.service.editar({ id: idInt, email, senha, nome })
 
-        res.status(200).json(result);
+            res.status(200).json(result);
 
         } catch (erros) {
             res.json(erros)
@@ -61,19 +61,38 @@ export class EmpresarioControlador {
         const idInt = parseInt(id);
 
         const result = await this.service.apagar(idInt);
-        
-        res.status(200).json({mensagem: result})
+
+        res.status(200).json({ mensagem: result })
+    }
+
+    async realizarAcesso(req: Request, res: Response) {
+        const { email, senha } = req.body;
+
+        try {
+            const token = await this.service.validar({ email, senha });
+
+            res.json({ token })
+        } catch (erro: Error | any) {
+            res.json(erro.message)
+        }
     }
 
     async validar(req: Request, res: Response) {
         const eventos: Evento[] = [];
         try {
 
-        await ValidarFormulario.empresario(new Empresario(10, "email@email.com", "Senha3@a", "pedro", eventos));
+            await ValidarFormulario.empresario(new Empresario(10, "email@email.com", "Senha3@a", "pedro", eventos));
 
-        res.json("De boa!");
+            res.json("De boa!");
         } catch (erros) {
             res.json(erros)
         }
-}
+    }
+
+    async testarToken(req: Request, res: Response) {
+        res.json({
+            message: 'Token válido.',
+            user: req.user 
+        });
+    }
 }

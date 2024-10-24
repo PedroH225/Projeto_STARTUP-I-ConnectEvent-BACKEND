@@ -4,6 +4,7 @@ import { EmpresarioControlador } from './controladores/EmpresarioControlador';
 import { UsuarioControlador } from './controladores/UsuarioControlador';
 import { EventoControlador } from './controladores/EventoControlador';
 import { TipoControlador } from './controladores/TipoControlador';
+import { verificarToken } from './utils/verificarToken';
 
 const routes = Router();
 
@@ -24,6 +25,7 @@ routes.get("/cidades", enderecoControlador.visualizarCidades.bind(enderecoContro
 // Empresário
 routes.get("/empresario/:id", empresarioControlador.visualizar.bind(empresarioControlador));
 routes.get("/empresario", empresarioControlador.visualizarTodos.bind(empresarioControlador));
+routes.post("/empresario/login", empresarioControlador.realizarAcesso.bind(empresarioControlador))
 routes.post("/empresario", empresarioControlador.criar.bind(empresarioControlador));
 routes.put("/empresario/:id", empresarioControlador.editar.bind(empresarioControlador));
 routes.delete("/empresario/:id", empresarioControlador.apagar.bind(empresarioControlador));
@@ -49,5 +51,6 @@ routes.get("/tipo", tipoControlador.visualizarTodos.bind(tipoControlador))
 
 
 routes.get("/validar", empresarioControlador.validar.bind(empresarioControlador))
+routes.get("/testartoken", verificarToken, empresarioControlador.testarToken.bind(empresarioControlador))
 
 export { routes };
