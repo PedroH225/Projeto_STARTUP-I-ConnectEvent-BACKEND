@@ -42,7 +42,7 @@ Para executar o backend do projeto, é necessário a instalação de: NodeJS, NP
    npm run dev
    ```
 
-6. **Execute o frontend**:
+5. **Execute o frontend**:
   - Siga as instruções de execução do frontend:
     [Link para o frontend](https://github.com/VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-FRONTEND)
 
