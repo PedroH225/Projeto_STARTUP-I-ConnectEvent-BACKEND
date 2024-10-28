@@ -4,7 +4,7 @@ import { EmpresarioControlador } from './controladores/EmpresarioControlador';
 import { UsuarioControlador } from './controladores/UsuarioControlador';
 import { EventoControlador } from './controladores/EventoControlador';
 import { TipoControlador } from './controladores/TipoControlador';
-import { verificarToken } from './utils/verificarToken';
+import { verificarToken } from './utils/VerificarToken';
 
 const routes = Router();
 
@@ -42,6 +42,7 @@ routes.get("/evento/filtrar", eventoControlador.filtrar.bind(eventoControlador))
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));
 routes.post("/evento", eventoControlador.criar.bind(eventoControlador));
+routes.put("/evento/:id/anunciar", eventoControlador.anunciar.bind(eventoControlador))
 routes.put("/evento/:id", eventoControlador.editar.bind(eventoControlador));
 routes.delete("/evento/:id", eventoControlador.apagar.bind(eventoControlador))
 

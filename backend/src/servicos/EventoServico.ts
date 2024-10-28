@@ -84,7 +84,7 @@ export class EventoServico {
     }
 
     async criar({ titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, empresario }: EventoRequest) {
-        let evento = new Evento(titulo, descricao, data, horario, tipo, telefone, livre, link)
+        let evento = new Evento(titulo, descricao, data, horario, tipo, telefone, livre, link, false)
         evento.fotos = []
         const endereco = new Endereco(local, estado, cidade, bairro, numero);
 
@@ -101,6 +101,20 @@ export class EventoServico {
         await ValidarFormulario.evento(evento);
 
         return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] })
+    }
+
+    async anunciar (id: number) {
+        const evento = await this.repositorio.findOne({where : {id : id}})
+
+        if (!evento) {
+            throw new Error("Evento não encontrado.")
+        }
+        
+        evento.isAnunciado = true;
+
+        await this.repositorio.save(evento)
+        
+        return "Evento anunciado com sucesso!";
     }
 
     async editar({ id, titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EditarEventoRequest) {

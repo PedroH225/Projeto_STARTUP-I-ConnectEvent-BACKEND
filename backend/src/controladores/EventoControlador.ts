@@ -67,6 +67,15 @@ export class EventoControlador {
         }
     }
 
+    async anunciar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const result = await this.service.anunciar(idInt);
+
+        res.json({ mensagem: result })
+    }
+
     async editar(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
         const idInt = parseInt(id);
