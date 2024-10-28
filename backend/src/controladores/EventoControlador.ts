@@ -28,6 +28,12 @@ export class EventoControlador {
         res.json(eventos);
     }
 
+    async visualizarAnunciados(req: Request, res: Response) {
+        const eventos = await this.service.visualizarAnunciados();
+
+        res.json(eventos)
+    }
+
     async visualizar(req: Request, res: Response) {
         const { id } = req.params;
         const idInt = parseInt(id);
@@ -35,6 +41,15 @@ export class EventoControlador {
         const evento = await this.service.visualizar(idInt);
 
         res.json(evento);
+    }
+
+    async visualizarEventosEmpresario(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const eventos = await this.service.visualizarEventosEmpresario(idInt);
+
+        res.json(eventos)
     }
 
     async filtrar(req: Request, res: Response) {
@@ -65,6 +80,15 @@ export class EventoControlador {
         } catch (erros) {
             res.json(erros);
         }
+    }
+
+    async anunciar(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const result = await this.service.anunciar(idInt);
+
+        res.json({ mensagem: result })
     }
 
     async editar(req: Request, res: Response): Promise<any> {

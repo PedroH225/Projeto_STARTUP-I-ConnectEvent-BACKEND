@@ -34,6 +34,9 @@ export class Evento {
     @Column()
     link: string;
 
+    @Column({name: "is_anunciado"})
+    isAnunciado : boolean
+
     @OneToMany(() => Foto, (foto) => foto.evento, { cascade: true })
     fotos!: Foto[];
 
@@ -46,23 +49,12 @@ export class Evento {
     empresario!: Empresario;
 
     @ManyToMany(() => Usuario, usuario => usuario.eventos)
-    @JoinTable({
-        name: "usuario_evento",
-        joinColumn: {
-            name: "evento_id",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "usuario_id",
-            referencedColumnName: "id"
-        }
-    })
-    participantes!: Usuario[]
+    participantes!: Usuario[];
 
     constructor(
         titulo: string, descricao: string, data: Date,
         horario: string, tipo: string, telefone: string, livre: boolean,
-        link: string
+        link: string, isAnunciado: boolean
     ) {
         this.titulo = titulo;
         this.descricao = descricao;
@@ -72,6 +64,7 @@ export class Evento {
         this.telefone = telefone;
         this.livre = livre;
         this.link = link;
+        this.isAnunciado = isAnunciado
     }
 
     toJSON() {
