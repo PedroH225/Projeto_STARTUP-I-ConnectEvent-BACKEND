@@ -1,4 +1,5 @@
 import { AppDataSource } from "../bd";
+import { Evento } from "../entidades/Evento";
 import { Usuario } from "../entidades/Usuario";
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 
@@ -12,9 +13,11 @@ type UpdateUsuarioRequest = {
 
 export class UsuarioServico {
     private repositorio;
+    private eventoRepositorio;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Usuario);
+        this.eventoRepositorio = AppDataSource.getRepository(Evento);
     }
 
     async visualizarTodos() {
@@ -26,6 +29,21 @@ export class UsuarioServico {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
         return usuario;
+    }
+
+    async visualizarEventosParticipando(usuarioId: number) {
+        try {
+            const eventos = await this.eventoRepositorio.find({where: {participantes: {id: usuarioId}}})
+
+            if (eventos.length === 0) {
+                throw new Error("Nenhum evento encontrado para este usuário.");
+            }
+
+            return eventos;
+        } catch (error) {
+            console.error("Erro ao visualizar eventos do usuário:", error);
+            throw new Error("Erro ao buscar eventos.");
+        }
     }
 
     async criar({ email, senha, nome, idade, genero, estado, cidade }: UsuarioRequest) {

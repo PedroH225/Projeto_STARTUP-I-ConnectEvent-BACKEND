@@ -23,6 +23,15 @@ export class UsuarioControlador {
         res.json(usuario);
     }
 
+    async visualizarEventosParticipando(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const  eventos = await this.service.visualizarEventosParticipando(idInt);
+
+        res.json(eventos);
+    }
+
     async criar(req: Request, res: Response) {
         const { email, senha, nome, idade, genero, estado, cidade } = req.body;
         const idadeInt = parseInt(idade)
