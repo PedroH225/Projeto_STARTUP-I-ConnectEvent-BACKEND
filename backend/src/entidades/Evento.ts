@@ -49,18 +49,7 @@ export class Evento {
     empresario!: Empresario;
 
     @ManyToMany(() => Usuario, usuario => usuario.eventos)
-    @JoinTable({
-        name: "usuario_evento",
-        joinColumn: {
-            name: "evento_id",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "usuario_id",
-            referencedColumnName: "id"
-        }
-    })
-    participantes!: Usuario[]
+    participantes!: Usuario[];
 
     constructor(
         titulo: string, descricao: string, data: Date,
