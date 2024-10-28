@@ -40,6 +40,18 @@ export class EventoServico {
         return eventosFormatados;
     }
 
+    async visualizarAnunciados() {
+        const eventos = await this.repositorio.find({where: { isAnunciado : true }, relations: ["endereco", "fotos"] });
+        
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
+    }
+
     async visualizar(id: number) {
         const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["endereco", "fotos", "empresario"] });
 
@@ -109,7 +121,7 @@ export class EventoServico {
         if (!evento) {
             throw new Error("Evento não encontrado.")
         }
-        
+
         evento.isAnunciado = true;
 
         await this.repositorio.save(evento)

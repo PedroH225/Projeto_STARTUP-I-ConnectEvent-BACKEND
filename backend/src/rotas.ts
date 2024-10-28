@@ -39,6 +39,7 @@ routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador)
 
 // Evento
 routes.get("/evento/filtrar", eventoControlador.filtrar.bind(eventoControlador))
+routes.get("/evento/anunciados", eventoControlador.visualizarAnunciados.bind(eventoControlador))
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));
 routes.post("/evento", eventoControlador.criar.bind(eventoControlador));
