@@ -45,6 +45,20 @@ export class UsuarioControlador {
         }
     }
 
+    async participar(req: Request, res: Response)  {
+        const usuarioId = parseInt(req.params.usuarioId);
+        const eventoId = parseInt(req.params.eventoId);
+
+        try {
+            await this.service.participar(usuarioId, eventoId);
+            res.status(200).json({ message: "Evento adicionado com sucesso." });
+        } catch (error : Error | any) {
+            console.log(error);
+            
+            res.status(400).json({ error: error.message });
+        }
+    };
+
     async editar(req: Request, res: Response) {
         const { id } = req.params
         const { email, senha, nome, idade, genero, estado, cidade } = req.body;

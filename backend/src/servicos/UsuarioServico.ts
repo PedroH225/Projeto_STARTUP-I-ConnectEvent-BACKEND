@@ -57,6 +57,23 @@ export class UsuarioServico {
         return usuario;
     }
 
+    async participar(usuarioId: number, eventoId: number) {
+        const usuario = await this.repositorio.findOne({ where: { id: usuarioId }, relations: ["eventos"] });
+        const evento = await this.eventoRepositorio.findOne({ where: { id: eventoId} });
+    
+        if (!usuario || !evento) {
+            throw new Error("Usuário ou evento não encontrado.");
+        }
+
+        if (!usuario.eventos.find(e => e.id === eventoId)) {
+            usuario.eventos.push(evento);
+
+            await this.repositorio.save(usuario);
+        } else {
+            throw new Error("Usuário já está participando deste evento.");
+        }
+    }
+
     async editar({ id, email, senha, nome, idade, genero, estado, cidade }: UpdateUsuarioRequest) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
