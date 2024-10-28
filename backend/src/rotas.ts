@@ -23,6 +23,7 @@ routes.get("/cidades", enderecoControlador.visualizarCidades.bind(enderecoContro
 
 
 // Empresário
+routes.get("/empresario/ocorridos/:id", empresarioControlador.visualizarEventosOcorridos.bind(empresarioControlador))
 routes.get("/empresario/:id", empresarioControlador.visualizar.bind(empresarioControlador));
 routes.get("/empresario", empresarioControlador.visualizarTodos.bind(empresarioControlador));
 routes.post("/empresario/login", empresarioControlador.realizarAcesso.bind(empresarioControlador))

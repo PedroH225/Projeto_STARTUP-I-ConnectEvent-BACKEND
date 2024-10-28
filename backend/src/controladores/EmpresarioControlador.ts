@@ -27,6 +27,15 @@ export class EmpresarioControlador {
         res.json(empresario);
     }
 
+    async visualizarEventosOcorridos(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const empresario = await this.service.visualizarEventosOcorridos(idInt);
+
+        res.json(empresario);
+    }
+
     async criar(req: Request, res: Response) {
         const { email, senha, nome } = req.body;
 
