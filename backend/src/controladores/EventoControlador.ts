@@ -43,6 +43,15 @@ export class EventoControlador {
         res.json(evento);
     }
 
+    async visualizarEventosEmpresario(req: Request, res: Response) {
+        const { id } = req.params;
+        const idInt = parseInt(id);
+
+        const eventos = await this.service.visualizarEventosEmpresario(idInt);
+
+        res.json(eventos)
+    }
+
     async filtrar(req: Request, res: Response) {
         const titulo = req.query.titulo as string;
         const tipo = req.query.tipo as string;
