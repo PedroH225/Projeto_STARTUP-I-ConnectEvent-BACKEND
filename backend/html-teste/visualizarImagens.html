@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Fotos do Evento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .foto-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        img {
+            width: 200px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Visualizar Fotos do Evento</h1>
+    <label for="eventoId">ID do Evento:</label>
+    <input type="number" id="eventoId" placeholder="Digite o ID do evento" />
+    <button id="buscarFotos">Buscar Fotos</button>
+
+    <div class="foto-container" id="fotoContainer"></div>
+
+    <script>
+        document.getElementById('buscarFotos').onclick = async function() {
+            const eventoId = document.getElementById('eventoId').value;
+            const response = await fetch(`http://localhost:3000/foto/${eventoId}/fotos`);
+            const fotos = await response.json();
+
+            const container = document.getElementById('fotoContainer');
+            container.innerHTML = ''; // Limpa o container
+
+            if (response.ok) {
+                fotos.forEach(foto => {
+                    const img = document.createElement('img');
+                    img.src = `http://localhost:3000/uploads/${foto.foto}`; // Corrigido para não incluir 'src'                    
+                    container.appendChild(img);
+                });
+            } else {
+                container.innerHTML = `<p>${fotos.message}</p>`;
+            }
+        };
+    </script>
+</body>
+</html>

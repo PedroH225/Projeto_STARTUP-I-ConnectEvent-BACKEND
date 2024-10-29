@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload de Fotos</title>
+</head>
+<body>
+
+  <h1>Upload de Fotos para o Evento</h1>
+  
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label for="eventoId">ID do Evento:</label>
+    <input type="text" id="eventoId" name="eventoId" required>
+    <br><br>
+    
+    <label for="fotos">Escolha as fotos:</label>
+    <input type="file" id="fotos" name="fotos" accept="image/*" multiple required>
+    <br><br>
+    
+    <button type="submit">Enviar Fotos</button>
+  </form>
+
+  <div id="responseMessage"></div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const eventoId = document.getElementById('eventoId').value;
+      const fotos = document.getElementById('fotos').files;
+
+      if (!eventoId || fotos.length === 0) {
+        alert('Por favor, insira o ID do evento e selecione pelo menos uma foto.');
+        return;
+      }
+
+      const formData = new FormData();
+      for (const foto of fotos) {
+        formData.append('fotos', foto);
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/foto/${eventoId}/upload-fotos`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        document.getElementById('responseMessage').innerText = result.message;
+
+        if (response.ok) {
+          alert('Fotos enviadas com sucesso!');
+        } else {
+          alert(`Erro: ${result.message}`);
+        }
+      } catch (error) {
+        console.log(error);
+        
+        alert('Erro ao enviar as fotos.');
+      }
+    });
+  </script>
+
+</body>
+</html>
