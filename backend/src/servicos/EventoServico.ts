@@ -41,7 +41,7 @@ export class EventoServico {
     }
 
     async visualizarAnunciados() {
-        const eventos = await this.repositorio.find({where: { isAnunciado : true }, relations: ["endereco", "fotos"] });
+        const eventos = await this.repositorio.find({where: { isAnunciado : true, data : MoreThanOrEqual(new Date()) }, relations: ["endereco", "fotos"] });
         
         const eventosFormatados = eventos.map(evento => ({
             ...evento,
@@ -75,7 +75,7 @@ export class EventoServico {
     }
 
     async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
-        const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
+        const whereConditions: any = { }; // Objeto para armazenar as condições de filtro
 
     if (titulo) {
         whereConditions.titulo = Like(`%${titulo}%`)
@@ -86,11 +86,15 @@ export class EventoServico {
 
     if (data) {
         whereConditions.data = MoreThanOrEqual(data); // Adiciona a condição de data se estiver presente
+    } else {
+        whereConditions.data = MoreThanOrEqual(new Date())
     }
 
     if (cidade) {
         whereConditions.endereco = { cidade: cidade }; // Adiciona a condição de cidade se estiver presente
     }
+
+    whereConditions.isAnunciado = true;
 
     const resultArray = await this.repositorio.find({
         where: whereConditions,
