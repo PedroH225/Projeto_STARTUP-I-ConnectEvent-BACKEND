@@ -8,14 +8,14 @@ export class Foto {
     id!: number;
 
     @Column()
-    foto: string;
+    caminho: string;
 
     @ManyToOne(() => Evento, (evento) => evento.fotos)
     @JoinColumn({ name: "evento_id" })
     evento: Evento;
 
     constructor(foto: string, evento: Evento) {
-        this.foto = foto;
+        this.caminho = foto;
         this.evento = evento
 
     }
@@ -23,7 +23,7 @@ export class Foto {
     toJSON() {
         return {
             id: this.id,
-            foto: this.foto
+            foto: this.caminho
         };
     }
 
