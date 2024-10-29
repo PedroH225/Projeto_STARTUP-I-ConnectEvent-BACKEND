@@ -47,7 +47,7 @@ export class Evento {
     @JoinColumn({ name: "usuario_id" })
     organizador!: Usuario;
 
-    @ManyToMany(() => Usuario, usuario => usuario.eventos)
+     @ManyToMany(() => Usuario, usuario => usuario.eventos)
     participantes!: Usuario[];
 
     constructor(
