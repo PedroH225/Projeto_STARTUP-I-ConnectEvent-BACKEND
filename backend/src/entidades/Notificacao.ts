@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Usuario } from "./Usuario";
 
 @Entity("notificacao")
@@ -20,18 +20,7 @@ export class Notificacao {
     data: Date;
 
     @ManyToMany(() => Usuario, usuario => usuario.notificacoes)
-    @JoinTable({
-        name:"notificacao_usuario",
-        joinColumn: {
-            name:"notificacao_id",
-            referencedColumnName:"id"
-        },
-        inverseJoinColumn: {
-            name:"usuario_id",
-            referencedColumnName:"id"
-        },  
-    })
-    usuarios: Usuario[]
+    usuarios: Usuario[];
 
     constructor(id: number, titulo: string, descricao: string, link: string, data: Date, usuarios: Usuario[]) {
         this.id = id;
