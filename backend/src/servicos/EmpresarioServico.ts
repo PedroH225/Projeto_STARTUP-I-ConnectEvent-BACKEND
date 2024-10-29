@@ -2,6 +2,8 @@ import { AppDataSource } from "../bd";
 import { Empresario } from "../entidades/Empresario";
 import jwt from 'jsonwebtoken';
 import { ValidarFormulario } from "../utils/ValidarFormulario";
+import { Evento } from "../entidades/Evento";
+import { LessThan } from "typeorm";
 
 type EmpresarioRequest = {
     email: string, senha: string, nome: string;
@@ -18,9 +20,11 @@ type LoginRequest = {
 export class EmpresarioServico {
 
     private repository;
+    private eventoRepository;
 
     constructor() {
         this.repository = AppDataSource.getRepository(Empresario);
+        this.eventoRepository = AppDataSource.getRepository(Evento);
     }
 
     async visualizarTodos() {
@@ -32,6 +36,12 @@ export class EmpresarioServico {
         const empresario = await this.repository.findOne({ where: { id: id } });
 
         return empresario;
+    }
+
+    async visualizarEventosOcorridos(id: number) {
+        const eventos = await this.eventoRepository.find({where: {empresario: {id : id}, data: LessThan(new Date()) }})
+
+        return eventos;
     }
 
     async criar({ email, senha, nome }: EmpresarioRequest) {

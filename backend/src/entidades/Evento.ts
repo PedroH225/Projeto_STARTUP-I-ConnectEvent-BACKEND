@@ -78,6 +78,7 @@ export class Evento {
             telefone: this.telefone,
             livre: this.livre,
             link: this.link,
+            isAnunciado: this.isAnunciado,
             fotos: this.fotos || [],
             endereco: this.endereco ? this.endereco.toJSON() : null,
             empresario: this.empresario ? this.empresario.toJSON() : null,
