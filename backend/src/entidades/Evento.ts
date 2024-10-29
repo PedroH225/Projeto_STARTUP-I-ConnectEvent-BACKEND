@@ -1,5 +1,4 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Empresario } from "./Empresario";
 import { Endereco } from "./Endereco";
 import { Foto } from "./Foto";
 import { Usuario } from "./Usuario";
@@ -34,8 +33,8 @@ export class Evento {
     @Column()
     link: string;
 
-    @Column({name: "is_anunciado"})
-    isAnunciado : boolean
+    @Column({ name: "is_anunciado" })
+    isAnunciado: boolean;
 
     @OneToMany(() => Foto, (foto) => foto.evento, { cascade: true })
     fotos!: Foto[];
@@ -44,9 +43,9 @@ export class Evento {
     @JoinColumn({ name: "endereco_id" })
     endereco!: Endereco;
 
-    @ManyToOne(() => Empresario, (empresario) => empresario.eventos)
-    @JoinColumn({ name: "empresario_id" })
-    empresario!: Empresario;
+    @ManyToOne(() => Usuario, (usuario) => usuario.eventosCriados)
+    @JoinColumn({ name: "usuario_id" })
+    organizador!: Usuario;
 
     @ManyToMany(() => Usuario, usuario => usuario.eventos)
     participantes!: Usuario[];
@@ -64,7 +63,7 @@ export class Evento {
         this.telefone = telefone;
         this.livre = livre;
         this.link = link;
-        this.isAnunciado = isAnunciado
+        this.isAnunciado = isAnunciado;
     }
 
     toJSON() {
@@ -73,6 +72,7 @@ export class Evento {
             titulo: this.titulo,
             descricao: this.descricao,
             data: this.data,
+
             horario: this.horario,
             tipo: this.tipo,
             telefone: this.telefone,
@@ -81,8 +81,8 @@ export class Evento {
             isAnunciado: this.isAnunciado,
             fotos: this.fotos || [],
             endereco: this.endereco ? this.endereco.toJSON() : null,
-            empresario: this.empresario ? this.empresario.toJSON() : null,
-            participantes: this.participantes ? this.participantes.map(participante => participante.toJSON()) : [] // Verificação adicionada
+            organizador: this.organizador ? this.organizador.toJSON() : null,
+            participantes: this.participantes ? this.participantes.map(participante => participante.toJSON()) : []
         };
     }
 }

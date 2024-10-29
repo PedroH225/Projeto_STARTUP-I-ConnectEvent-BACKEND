@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { Evento } from "./Evento";
 import { Notificacao } from "./Notificacao";
 import { Pessoa } from "./Pessoa";
@@ -20,28 +20,31 @@ export class Usuario extends Pessoa {
 
     @ManyToMany(() => Evento, evento => evento.participantes)
     @JoinTable({
-        name:"usuario_evento",
+        name: "usuario_evento",
         joinColumn: {
-            name:"usuario_id",
-            referencedColumnName:"id"
+            name: "usuario_id",
+            referencedColumnName: "id"
         },
         inverseJoinColumn: {
-            name:"evento_id",
-            referencedColumnName:"id"
+            name: "evento_id",
+            referencedColumnName: "id"
         }
     })
     eventos: Evento[];
 
+    @OneToMany(() => Evento, evento => evento.organizador)
+    eventosCriados: Evento[];
+
     @ManyToMany(() => Notificacao, notificacao => notificacao.usuarios)
     @JoinTable({
-        name:"notificacao_usuario",
+        name: "notificacao_usuario",
         joinColumn: {
-            name:"usuario_id",
-            referencedColumnName:"id"
+            name: "usuario_id",
+            referencedColumnName: "id"
         },
         inverseJoinColumn: {
-            name:"notificacao_id",
-            referencedColumnName:"id"
+            name: "notificacao_id",
+            referencedColumnName: "id"
         }
     })
     notificacoes: Notificacao[];
@@ -49,7 +52,7 @@ export class Usuario extends Pessoa {
     constructor(
         id: number, email: string, senha: string, nome: string, 
         idade: number, genero: string, estado: string, cidade: string,
-        eventos: Evento[], notificacoes: Notificacao[]
+        eventos: Evento[], eventosCriados: Evento[], notificacoes: Notificacao[]
     ) { 
         super();
         this.id = id;
@@ -59,17 +62,16 @@ export class Usuario extends Pessoa {
         this.idade = idade;
         this.genero = genero;
         this.estado = estado;
-        this.cidade = cidade
+        this.cidade = cidade;
         this.eventos = eventos;
+        this.eventosCriados = eventosCriados;
         this.notificacoes = notificacoes;
-        
     }
 
     toJSON() {
         return {
             id: this.id,
             email: this.email,
-            senha: this.senha,
             nome: this.nome,
             idade: this.idade,
             genero: this.genero,
