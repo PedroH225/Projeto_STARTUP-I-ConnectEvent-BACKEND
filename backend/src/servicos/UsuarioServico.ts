@@ -1,14 +1,34 @@
 import { AppDataSource } from "../bd";
-import { Evento } from "../entidades/Evento";
 import { Usuario } from "../entidades/Usuario";
+import { Evento } from "../entidades/Evento";
 import { ValidarFormulario } from "../utils/ValidarFormulario";
+import jwt from 'jsonwebtoken';
+import { LessThan } from "typeorm";
 
 type UsuarioRequest = {
-    email: string, senha: string, nome: string, idade: number, genero: string, estado: string, cidade: string;
+    email: string;
+    senha: string;
+    nome: string;
+    idade: number;
+    genero: string;
+    estado: string;
+    cidade: string;
 }
 
 type UpdateUsuarioRequest = {
-    id: number, email: string, senha: string, nome: string, idade: number, genero: string, estado: string, cidade: string;
+    id: number;
+    email: string;
+    senha: string;
+    nome: string;
+    idade: number;
+    genero: string;
+    estado: string;
+    cidade: string;
+}
+
+type LoginRequest = {
+    email: string;
+    senha: string;
 }
 
 export class UsuarioServico {
@@ -27,14 +47,12 @@ export class UsuarioServico {
 
     async visualizar(id: number) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
-
         return usuario;
     }
 
-    async visualizarPorEmail(email : string) {
+    async visualizarPorEmail(email: string) {
         try {
-            const usuario = await this.repositorio.findOne({ where: { email : email}})
-
+            const usuario = await this.repositorio.findOne({ where: { email: email } });
             return usuario;
         } catch {
             return "Usuário não encontrado.";
@@ -42,42 +60,31 @@ export class UsuarioServico {
     }
 
     async visualizarEventosParticipando(usuarioId: number) {
-        try {
-            const eventos = await this.eventoRepositorio.find({where: {participantes: {id: usuarioId}}})
-
+            const eventos = await this.eventoRepositorio.find({ where: { participantes: { id: usuarioId } } });
             if (eventos.length === 0) {
                 throw new Error("Nenhum evento encontrado para este usuário.");
             }
-
             return eventos;
-        } catch (error) {
-            console.error("Erro ao visualizar eventos do usuário:", error);
-            throw new Error("Erro ao buscar eventos.");
-        }
+        
     }
 
     async criar({ email, senha, nome, idade, genero, estado, cidade }: UsuarioRequest) {
-
         const usuario = await this.repositorio.create({ email, senha, nome, idade, genero, estado, cidade });
-
-        await ValidarFormulario.usuario(usuario)
-
+        await ValidarFormulario.usuario(usuario);
         await this.repositorio.save(usuario);
-
         return usuario;
     }
 
     async participar(usuarioId: number, eventoId: number) {
         const usuario = await this.repositorio.findOne({ where: { id: usuarioId }, relations: ["eventos"] });
-        const evento = await this.eventoRepositorio.findOne({ where: { id: eventoId} });
-    
+        const evento = await this.eventoRepositorio.findOne({ where: { id: eventoId } });
+
         if (!usuario || !evento) {
             throw new Error("Usuário ou evento não encontrado.");
         }
 
         if (!usuario.eventos.find(e => e.id === eventoId)) {
             usuario.eventos.push(evento);
-
             await this.repositorio.save(usuario);
         } else {
             throw new Error("Usuário já está participando deste evento.");
@@ -88,7 +95,7 @@ export class UsuarioServico {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
         if (!usuario) {
-            return new Error("O empresário não existe!")
+            return new Error("O usuário não existe!");
         }
 
         usuario.email = email ? email : usuario.email;
@@ -99,17 +106,35 @@ export class UsuarioServico {
         usuario.estado = estado ? estado : usuario.estado;
         usuario.cidade = cidade ? cidade : usuario.cidade;
 
-        await ValidarFormulario.usuario(usuario)
-
+        await ValidarFormulario.usuario(usuario);
         await this.repositorio.save(usuario);
-
         return usuario;
     }
 
     async apagar(id: number) {
-        
         await this.repositorio.delete(id);
-
         return "Usuário deletado com sucesso.";
     }
+
+    async validar({ email, senha }: LoginRequest) {
+        const usuario = await this.repositorio.findOne({ where: { email: email, senha: senha } });
+
+        if (usuario) {
+            const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET as string, {
+                expiresIn: '1h' // Token expira em 1 hora
+            });
+            return token;
+        } else {
+            throw new Error("Usuário ou senha incorretos");
+        }
+    }
+
+    async visualizarEventosOcorridos(usuarioId: number) {
+        const eventos = await this.eventoRepositorio.find({
+            where: { participantes: { id: usuarioId }, data: LessThan(new Date()) }
+        });
+        return eventos;
+    }
+
+    
 }
