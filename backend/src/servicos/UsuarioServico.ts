@@ -31,6 +31,16 @@ export class UsuarioServico {
         return usuario;
     }
 
+    async visualizarPorEmail(email : string) {
+        try {
+            const usuario = await this.repositorio.findOne({ where: { email : email}})
+
+            return usuario;
+        } catch {
+            return "Usuário não encontrado.";
+        }
+    }
+
     async visualizarEventosParticipando(usuarioId: number) {
         try {
             const eventos = await this.eventoRepositorio.find({where: {participantes: {id: usuarioId}}})
