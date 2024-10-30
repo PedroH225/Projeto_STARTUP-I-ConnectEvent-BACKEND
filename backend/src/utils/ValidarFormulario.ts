@@ -75,6 +75,18 @@ export class ValidarFormulario {
             erros.push(new FormErro("telefoneErro", "Campo obrigatório."));
         }
 
+        if (evento.endereco.local.trim() === "") {
+            erros.push(new FormErro("localErro", "Campo obrigatório."));
+        }
+
+        if (evento.endereco.bairro.trim() === "") {
+            erros.push(new FormErro("bairroErro", "Campo obrigatório."));
+        }
+
+        if (evento.endereco.cidade.trim() === "") {
+            erros.push(new FormErro("cidadeErro", "Campo obrigatório."));
+        }
+
         if (erros.length > 0) {
             throw erros;
         }
