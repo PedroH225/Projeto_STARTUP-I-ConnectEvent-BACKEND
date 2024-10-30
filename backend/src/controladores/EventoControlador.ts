@@ -68,7 +68,7 @@ export class EventoControlador {
 
         res.status(201).json(result);
         } catch (erros) {
-            res.json(erros);
+            res.status(400).json(erros);
         }
     }
 
@@ -87,7 +87,7 @@ export class EventoControlador {
 
         res.json(evento);
         } catch (erros) {
-            res.json(erros)
+            res.status(400).json(erros)
         }
     }
 

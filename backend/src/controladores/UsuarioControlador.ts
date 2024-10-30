@@ -30,7 +30,7 @@ export class UsuarioControlador {
         const eventos = await this.service.visualizarEventosParticipando(idInt);
         res.json(eventos);
         } catch (erro : Error | any) {
-            res.json( { mensagem : erro.message })
+            res.status(400).json( { mensagem : erro.message })
         }
     }
 
@@ -78,7 +78,7 @@ export class UsuarioControlador {
             const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade });
             res.status(200).json(result);
         } catch (erros) {
-            res.json(erros);
+            res.status(400).json(erros);
         }
     }
 
@@ -96,7 +96,7 @@ export class UsuarioControlador {
             const token = await this.service.validar({ email, senha });
             res.json({ token });
         } catch (erro: Error | any) {
-            res.json(erro.message);
+            res.status(400).json(erro.message);
         }
     }
 
