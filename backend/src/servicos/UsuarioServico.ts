@@ -69,9 +69,12 @@ export class UsuarioServico {
     }
 
     async criar({ email, senha, nome, idade, genero, estado, cidade }: UsuarioRequest) {
+        
         const usuario = await this.repositorio.create({ email, senha, nome, idade, genero, estado, cidade });
+
         await ValidarFormulario.usuario(usuario);
         await this.repositorio.save(usuario);
+
         return usuario;
     }
 
