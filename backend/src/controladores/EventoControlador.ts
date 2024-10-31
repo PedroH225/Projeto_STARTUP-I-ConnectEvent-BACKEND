@@ -37,6 +37,18 @@ export class EventoControlador {
         res.json(evento);
     }
 
+    async verificarParticipacao(req: Request, res: Response) {
+        const usuarioId = req.user.id; // Obtendo o ID do usuário a partir do token
+        const eventoId = parseInt(req.params.eventoId); // O ID do evento é passado como parâmetro
+
+        try {
+            const estaParticipando = await this.service.verificarParticipacao(usuarioId, eventoId);
+            res.json({ estaParticipando });
+        } catch (erro: Error | any) {
+            res.status(400).json({ mensagem: erro.message });
+        }
+    }
+
     async filtrar(req: Request, res: Response) {
         const titulo = req.query.titulo as string;
         const tipo = req.query.tipo as string;
