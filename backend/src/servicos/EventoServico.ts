@@ -68,6 +68,21 @@ export class EventoServico {
         return eventoFormatado; // Retorna o evento formatado
     }
 
+    async verificarParticipacao(usuarioId: number, eventoId: number): Promise<boolean> {
+        const evento = await this.repositorio.findOne({ 
+            where: { id: eventoId }, 
+            relations: ["participantes"] // Certifique-se de que a relação com participantes está carregada
+        });
+
+        if (!evento) {
+            throw new Error("Evento não encontrado.");
+        }
+
+        // Verifica se o usuário está na lista de participantes
+        const estaParticipando = evento.participantes.some(participante => participante.id === usuarioId);
+        return estaParticipando;
+    }
+
     async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
         const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
 

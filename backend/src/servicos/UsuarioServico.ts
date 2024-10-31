@@ -3,7 +3,7 @@ import { Usuario } from "../entidades/Usuario";
 import { Evento } from "../entidades/Evento";
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 import jwt from 'jsonwebtoken';
-import { LessThan } from "typeorm";
+import { LessThan, MoreThanOrEqual } from "typeorm";
 
 type UsuarioRequest = {
     email: string;
@@ -52,6 +52,12 @@ export class UsuarioServico {
 
     async visualizarEventosUsuario(id: number) { // Alterado para Usuario
         const eventos = await this.eventoRepositorio.find({where: {organizador: {id : id}}}); // Alterado para Usuario
+
+        return eventos;
+    }
+
+    async visualizarEventosUsuarioAnunciado(id: number) { // Alterado para Usuario
+        const eventos = await this.eventoRepositorio.find({where: { organizador: {id : id}, isAnunciado: true, data : MoreThanOrEqual(new Date()) } }); // Alterado para Usuario
 
         return eventos;
     }
