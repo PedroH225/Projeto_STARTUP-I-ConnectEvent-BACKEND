@@ -73,7 +73,20 @@ export class UsuarioControlador {
 
         try {
             await this.service.participar(usuarioId, eventoId);
-            res.status(200).json({ message: "Evento adicionado com sucesso." });
+            res.status(200).json({ message: "Presença confirmada com sucesso!" });
+        } catch (error: Error | any) {
+            console.log(error);
+            res.status(400).json({ error: error.message });
+        }
+    }
+
+    async removerParticipacao(req: Request, res: Response) {
+        const usuarioId = parseInt(req.user.id);
+        const eventoId = parseInt(req.params.eventoId);
+
+        try {
+            await this.service.removerParticipacao(usuarioId, eventoId);
+            res.status(200).json({ message: "Presença retirada com sucesso!" });
         } catch (error: Error | any) {
             console.log(error);
             res.status(400).json({ error: error.message });

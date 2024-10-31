@@ -28,6 +28,10 @@ export class ValidarFormulario {
             erros.push(new FormErro("senhaErro", "Campo obrigatório."));
         }
 
+        if (usuario.idade == null) {
+            erros.push(new FormErro("idadeErro", "Campo obrigatório."));
+        }
+
         if (erros.length > 0) {
             throw erros;
         }

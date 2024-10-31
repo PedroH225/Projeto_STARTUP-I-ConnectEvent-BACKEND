@@ -123,6 +123,25 @@ export class UsuarioServico {
         }
     }
 
+    async removerParticipacao(usuarioId: number, eventoId: number) {
+        const usuario = await this.repositorio.findOne({ where: { id: usuarioId }, relations: ["eventos"] });
+        const evento = await this.eventoRepositorio.findOne({ where: { id: eventoId } });
+    
+        if (!usuario || !evento) {
+            throw new Error("Usuário ou evento não encontrado.");
+        }
+    
+        const eventoIndex = usuario.eventos.findIndex(e => e.id === eventoId);
+    
+        if (eventoIndex !== -1) {
+            usuario.eventos.splice(eventoIndex, 1); // Remove o evento da lista de eventos do usuário
+            await this.repositorio.save(usuario);
+        } else {
+            throw new Error("Usuário não está participando deste evento.");
+        }
+    }
+    
+
     async editar({ id, email, senha, nome, idade, genero, estado, cidade }: UpdateUsuarioRequest) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
@@ -170,7 +189,7 @@ export class UsuarioServico {
         const eventos = await this.eventoRepositorio.find({
             where: { participantes: { id: usuarioId }, data: LessThan(new Date()) }
         });
-        
+
         const eventosFormatados = eventos.map(evento => ({
             ...evento,
             data: Formatador.formatDate(evento.data), 
