@@ -84,10 +84,14 @@ export class UsuarioServico {
         
         const usuario = await this.repositorio.create({ email, senha, nome, idade, genero, estado, cidade });
 
+        try {
         await ValidarFormulario.usuario(usuario);
         await this.repositorio.save(usuario);
 
         return usuario;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async participar(usuarioId: number, eventoId: number) {
@@ -121,9 +125,14 @@ export class UsuarioServico {
         usuario.estado = estado ? estado : usuario.estado;
         usuario.cidade = cidade ? cidade : usuario.cidade;
 
+        try {
         await ValidarFormulario.usuario(usuario);
+
         await this.repositorio.save(usuario);
         return usuario;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async apagar(id: number) {
