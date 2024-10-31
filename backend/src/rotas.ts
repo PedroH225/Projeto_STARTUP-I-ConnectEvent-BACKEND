@@ -34,6 +34,7 @@ routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador)
 
 routes.get("/organizador/ocorridos", verificarToken, usuarioControlador.visualizarEventosOcorridos.bind(usuarioControlador));
 routes.get("/organizador/evento", verificarToken, usuarioControlador.visualizarEventosUsuario.bind(usuarioControlador));
+routes.get("/organizador/eventoAnunciado", verificarToken, usuarioControlador.visualizarEventosUsuarioAnunciado.bind(usuarioControlador));
 routes.put("/usuario/participar/:eventoId", verificarToken, usuarioControlador.participar.bind(usuarioControlador));
 
 // Evento
