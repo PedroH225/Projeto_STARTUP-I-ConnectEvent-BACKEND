@@ -50,6 +50,12 @@ export class UsuarioServico {
         return usuario;
     }
 
+    async visualizarEventosUsuario(id: number) { // Alterado para Usuario
+        const eventos = await this.eventoRepositorio.find({where: {organizador: {id : id}}}); // Alterado para Usuario
+
+        return eventos;
+    }
+
     async visualizarPorEmail(email: string) {
         try {
             const usuario = await this.repositorio.findOne({ where: { email: email } });

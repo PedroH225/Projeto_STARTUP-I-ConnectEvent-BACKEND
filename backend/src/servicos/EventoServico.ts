@@ -68,12 +68,6 @@ export class EventoServico {
         return eventoFormatado; // Retorna o evento formatado
     }
 
-    async visualizarEventosUsuario(id: number) { // Alterado para Usuario
-        const eventos = await this.repositorio.find({where: {organizador: {id : id}}}); // Alterado para Usuario
-
-        return eventos;
-    }
-
     async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
         const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
 

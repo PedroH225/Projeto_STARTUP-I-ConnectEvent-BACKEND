@@ -24,7 +24,7 @@ export class UsuarioControlador {
     }
 
     async visualizarEventosParticipando(req: Request, res: Response) {
-        const { id } = req.params;
+        const id = req.user.id;
         const idInt = parseInt(id);
         try {
         const eventos = await this.service.visualizarEventosParticipando(idInt);
@@ -34,8 +34,14 @@ export class UsuarioControlador {
         }
     }
 
+    async visualizarEventosUsuario(req: Request, res: Response) { // Alterado para Usuario
+        const id = req.user.id;
+        const eventos = await this.service.visualizarEventosUsuario(parseInt(id)); // Alterado para Usuario
+        res.json(eventos);
+    }
+
     async visualizarEventosOcorridos(req: Request, res: Response) {
-        const { id } = req.params;
+        const id = req.user.id;
         const idInt = parseInt(id);
 
         const usuario = await this.service.visualizarEventosOcorridos(idInt);
@@ -56,7 +62,7 @@ export class UsuarioControlador {
     }
 
     async participar(req: Request, res: Response) {
-        const usuarioId = parseInt(req.params.usuarioId);
+        const usuarioId = parseInt(req.user.id);
         const eventoId = parseInt(req.params.eventoId);
 
         try {
