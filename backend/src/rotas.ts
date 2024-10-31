@@ -24,26 +24,31 @@ routes.put("/endereco/:id", enderecoControlador.editar.bind(enderecoControlador)
 routes.get("/cidades", enderecoControlador.visualizarCidades.bind(enderecoControlador));
 
 // Usuário
-routes.get("/usuario/evento/:id", usuarioControlador.visualizarEventosParticipando.bind(usuarioControlador));
-routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
-routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
-routes.get("/organizador/ocorridos/:id", usuarioControlador.visualizarEventosOcorridos.bind(usuarioControlador))
 routes.post("/usuario/login", usuarioControlador.realizarAcesso.bind(usuarioControlador));
 routes.post("/usuario", usuarioControlador.criar.bind(usuarioControlador));
-routes.put("/usuario/:usuarioId/participar/:eventoId", usuarioControlador.participar.bind(usuarioControlador));
+routes.get("/usuario/evento", verificarToken, usuarioControlador.visualizarEventosParticipando.bind(usuarioControlador));
+routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
+routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
 routes.put("/usuario/:id", usuarioControlador.editar.bind(usuarioControlador));
 routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador));
+
+routes.get("/organizador/ocorridos", verificarToken, usuarioControlador.visualizarEventosOcorridos.bind(usuarioControlador));
+routes.get("/organizador/evento", verificarToken, usuarioControlador.visualizarEventosUsuario.bind(usuarioControlador));
+routes.put("/usuario/participar/:eventoId", verificarToken, usuarioControlador.participar.bind(usuarioControlador));
 
 // Evento
 routes.get("/evento/filtrar", eventoControlador.filtrar.bind(eventoControlador));
 routes.get("/evento/anunciados", eventoControlador.visualizarAnunciados.bind(eventoControlador));
-routes.get("/evento/organizador/:id", eventoControlador.visualizarEventosUsuario.bind(eventoControlador)); // Atualizar a rota para buscar eventos de um usuário
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));
-routes.post("/evento", eventoControlador.criar.bind(eventoControlador));
+
+routes.post("/evento", verificarToken, eventoControlador.criar.bind(eventoControlador));
+
 routes.put("/evento/:id/anunciar", eventoControlador.anunciar.bind(eventoControlador));
 routes.put("/evento/:id", eventoControlador.editar.bind(eventoControlador));
+
 routes.delete("/evento/:id", eventoControlador.apagar.bind(eventoControlador));
+
 
 // Tipos
 routes.get("/tipo", tipoControlador.visualizarTodos.bind(tipoControlador));

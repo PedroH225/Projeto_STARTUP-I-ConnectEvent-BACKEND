@@ -4,7 +4,7 @@ import { UsuarioServico } from "../servicos/UsuarioServico";
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
-    link: string, fotos: string[], local: string, estado: string, cidade: string, bairro: string, numero: number, usuarioId: number // Alterado para usuarioId
+    link: string, fotos: string[], local: string, estado: string, cidade: string, bairro: string, numero: number 
 }
 
 type EditarEventoRequest = {
@@ -37,12 +37,6 @@ export class EventoControlador {
         res.json(evento);
     }
 
-    async visualizarEventosUsuario(req: Request, res: Response) { // Alterado para Usuario
-        const { id } = req.params;
-        const eventos = await this.service.visualizarEventosUsuario(parseInt(id)); // Alterado para Usuario
-        res.json(eventos);
-    }
-
     async filtrar(req: Request, res: Response) {
         const titulo = req.query.titulo as string;
         const tipo = req.query.tipo as string;
@@ -55,9 +49,10 @@ export class EventoControlador {
     }
 
     async criar(req: Request, res: Response): Promise<any> {
-        const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, usuarioId }: EventoRequest = req.body;
+        const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EventoRequest = req.body;
+        const id = parseInt(req.user.id)
 
-        const organizador = await this.usuarioServico.visualizar(usuarioId);
+        const organizador = await this.usuarioServico.visualizar(id);
 
         if (!organizador) {
             return res.status(404).json({ message: "Empresário não encontrado." });
