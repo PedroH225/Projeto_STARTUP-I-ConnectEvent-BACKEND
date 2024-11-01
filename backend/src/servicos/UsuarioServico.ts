@@ -113,11 +113,32 @@ export class UsuarioServico {
     async visualizarEventosParticipando(usuarioId: number) {
             const eventos = await this.eventoRepositorio.find({ where: { participantes: { id: usuarioId } } });
             if (eventos.length === 0) {
-                throw new Error("Nenhum evento encontrado para este usuário.");
+                return [];
             }
-            return eventos;
+
+            const eventosFormatados = eventos.map(evento => ({
+                ...evento,
+                data: Formatador.formatDate(evento.data), 
+                horario: Formatador.formatarHorario(evento.horario)
+            }));
+            return eventosFormatados;
         
     }
+
+    async visualizarEventosParticipandoOcorridos(usuarioId: number) {
+        const eventos = await this.eventoRepositorio.find({ where: { data: LessThanOrEqual(new Date()), participantes: { id: usuarioId }}});
+        if (eventos.length === 0) {
+            return [];
+        }
+
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        return eventosFormatados;
+    
+}
 
     async criar({ email, senha, nome, idade, genero, estado, cidade }: UsuarioRequest) {
         

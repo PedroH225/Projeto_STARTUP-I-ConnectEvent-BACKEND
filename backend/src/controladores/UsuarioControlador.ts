@@ -34,6 +34,18 @@ export class UsuarioControlador {
         }
     }
 
+    async visualizarEventosParticipandoOcorridos(req: Request, res: Response) {
+        const id = req.user.id;
+        const idInt = parseInt(id);
+
+        try {
+        const eventos = await this.service.visualizarEventosParticipandoOcorridos(idInt);
+        res.json(eventos);
+        } catch (erro : Error | any) {
+            res.status(400).json( { mensagem : erro.message })
+        }
+    }
+
     async visualizarEventosUsuario(req: Request, res: Response) { // Alterado para Usuario
         const id = req.user.id;
         const eventos = await this.service.visualizarEventosUsuario(parseInt(id)); // Alterado para Usuario
