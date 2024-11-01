@@ -111,7 +111,7 @@ export class UsuarioServico {
     }
 
     async visualizarEventosParticipando(usuarioId: number) {
-            const eventos = await this.eventoRepositorio.find({ where: { participantes: { id: usuarioId } } });
+            const eventos = await this.eventoRepositorio.find({ where: { participantes: { id: usuarioId }, data: MoreThanOrEqual(new Date()) } });
             if (eventos.length === 0) {
                 return [];
             }
