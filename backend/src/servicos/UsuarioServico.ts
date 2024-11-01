@@ -3,7 +3,7 @@ import { Usuario } from "../entidades/Usuario";
 import { Evento } from "../entidades/Evento";
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 import jwt from 'jsonwebtoken';
-import { LessThan, MoreThanOrEqual } from "typeorm";
+import { LessThan, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { Formatador } from "../utils/FormatadorDeData";
 
 type UsuarioRequest = {
@@ -66,6 +66,20 @@ export class UsuarioServico {
     async visualizarEventosUsuarioAnunciado(id: number) { // Alterado para Usuario
         const eventos = await this.eventoRepositorio.find({where: { organizador: {id : id}, isAnunciado: true, data : MoreThanOrEqual(new Date()) } }); // Alterado para Usuario
  
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
+    }
+
+    async visualizarEventosOcorridos(usuarioId: number) {
+        const eventos = await this.eventoRepositorio.find({
+            where: { organizador: { id: usuarioId }, data: LessThanOrEqual(new Date()) }
+        });
+        
         const eventosFormatados = eventos.map(evento => ({
             ...evento,
             data: Formatador.formatDate(evento.data), 
@@ -185,19 +199,4 @@ export class UsuarioServico {
         }
     }
 
-    async visualizarEventosOcorridos(usuarioId: number) {
-        const eventos = await this.eventoRepositorio.find({
-            where: { participantes: { id: usuarioId }, data: LessThan(new Date()) }
-        });
-
-        const eventosFormatados = eventos.map(evento => ({
-            ...evento,
-            data: Formatador.formatDate(evento.data), 
-            horario: Formatador.formatarHorario(evento.horario)
-        }));
-        
-        return eventosFormatados;
-    }
-
-    
 }
