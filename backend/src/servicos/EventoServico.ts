@@ -121,16 +121,16 @@ export class EventoServico {
         evento.endereco = endereco;
         evento.organizador = organizador; // Alterado para Usuario
 
-        let eventoDb = await this.repositorio.save(evento);
-
-        for (const tempFoto of fotos) {
-            let foto = new Foto(tempFoto.foto, evento);
-            await this.fotoRepositorio.save(foto);
-        }
-
+        try {
         await ValidarFormulario.evento(evento);
 
+        let eventoDb = await this.repositorio.save(evento);
+
         return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
+
+    } catch (error) {
+        throw error;
+    }
     }
 
     async anunciar (id: number) {
@@ -171,21 +171,16 @@ export class EventoServico {
         evento.endereco.numero = numero ? numero : evento.endereco.numero;
         evento.organizador = evento.organizador;
 
+        try {
+            await ValidarFormulario.evento(evento);
+            
+            let eventoDb = await this.repositorio.save(evento);
+    
+            return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
 
-        let eventodps = await this.repositorio.save(evento);
-
-        for (const foto of evento.fotos) {
-            await this.fotoRepositorio.remove(foto);
+        } catch (error) {
+            throw error;
         }
-
-        for (const tempFoto of fotos) {
-            let foto = new Foto(tempFoto.foto, evento);
-            await this.fotoRepositorio.save(foto);
-        }
-
-        await ValidarFormulario.evento(evento);
-
-        return await this.repositorio.findOne({ where: { id: eventodps.id }, relations: ["fotos", "endereco"] });
     }
 
     async apagar(id: number) {

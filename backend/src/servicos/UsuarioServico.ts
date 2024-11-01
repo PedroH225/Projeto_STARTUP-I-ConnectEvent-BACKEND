@@ -3,7 +3,8 @@ import { Usuario } from "../entidades/Usuario";
 import { Evento } from "../entidades/Evento";
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 import jwt from 'jsonwebtoken';
-import { LessThan, MoreThanOrEqual } from "typeorm";
+import { LessThan, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
+import { Formatador } from "../utils/FormatadorDeData";
 
 type UsuarioRequest = {
     email: string;
@@ -53,13 +54,51 @@ export class UsuarioServico {
     async visualizarEventosUsuario(id: number) { // Alterado para Usuario
         const eventos = await this.eventoRepositorio.find({where: {organizador: {id : id}}}); // Alterado para Usuario
 
-        return eventos;
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
     }
 
     async visualizarEventosUsuarioAnunciado(id: number) { // Alterado para Usuario
         const eventos = await this.eventoRepositorio.find({where: { organizador: {id : id}, isAnunciado: true, data : MoreThanOrEqual(new Date()) } }); // Alterado para Usuario
+ 
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
+    }
 
-        return eventos;
+    async visualizarEventosUsuarioNaoAnunciado(id: number) { // Alterado para Usuario
+        const eventos = await this.eventoRepositorio.find({where: { organizador: {id : id}, isAnunciado: false, data : MoreThanOrEqual(new Date()) } }); // Alterado para Usuario
+ 
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
+    }
+
+    async visualizarEventosOcorridos(usuarioId: number) {
+        const eventos = await this.eventoRepositorio.find({
+            where: { organizador: { id: usuarioId }, data: LessThanOrEqual(new Date()) }
+        });
+        
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
     }
 
     async visualizarPorEmail(email: string) {
@@ -84,10 +123,14 @@ export class UsuarioServico {
         
         const usuario = await this.repositorio.create({ email, senha, nome, idade, genero, estado, cidade });
 
+        try {
         await ValidarFormulario.usuario(usuario);
         await this.repositorio.save(usuario);
 
         return usuario;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async participar(usuarioId: number, eventoId: number) {
@@ -106,6 +149,25 @@ export class UsuarioServico {
         }
     }
 
+    async removerParticipacao(usuarioId: number, eventoId: number) {
+        const usuario = await this.repositorio.findOne({ where: { id: usuarioId }, relations: ["eventos"] });
+        const evento = await this.eventoRepositorio.findOne({ where: { id: eventoId } });
+    
+        if (!usuario || !evento) {
+            throw new Error("Usuário ou evento não encontrado.");
+        }
+    
+        const eventoIndex = usuario.eventos.findIndex(e => e.id === eventoId);
+    
+        if (eventoIndex !== -1) {
+            usuario.eventos.splice(eventoIndex, 1); // Remove o evento da lista de eventos do usuário
+            await this.repositorio.save(usuario);
+        } else {
+            throw new Error("Usuário não está participando deste evento.");
+        }
+    }
+    
+
     async editar({ id, email, senha, nome, idade, genero, estado, cidade }: UpdateUsuarioRequest) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
@@ -121,9 +183,14 @@ export class UsuarioServico {
         usuario.estado = estado ? estado : usuario.estado;
         usuario.cidade = cidade ? cidade : usuario.cidade;
 
+        try {
         await ValidarFormulario.usuario(usuario);
+
         await this.repositorio.save(usuario);
         return usuario;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async apagar(id: number) {
@@ -144,12 +211,4 @@ export class UsuarioServico {
         }
     }
 
-    async visualizarEventosOcorridos(usuarioId: number) {
-        const eventos = await this.eventoRepositorio.find({
-            where: { participantes: { id: usuarioId }, data: LessThan(new Date()) }
-        });
-        return eventos;
-    }
-
-    
 }

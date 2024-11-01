@@ -34,8 +34,13 @@ routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador)
 
 routes.get("/organizador/ocorridos", verificarToken, usuarioControlador.visualizarEventosOcorridos.bind(usuarioControlador));
 routes.get("/organizador/evento", verificarToken, usuarioControlador.visualizarEventosUsuario.bind(usuarioControlador));
+
 routes.get("/organizador/eventoAnunciado", verificarToken, usuarioControlador.visualizarEventosUsuarioAnunciado.bind(usuarioControlador));
+routes.get("/organizador/eventoNaoAnunciado", verificarToken, usuarioControlador.visualizarEventosUsuarioNaoAnunciado.bind(usuarioControlador));
+
 routes.put("/usuario/participar/:eventoId", verificarToken, usuarioControlador.participar.bind(usuarioControlador));
+routes.put("/usuario/removerParticipar/:eventoId", verificarToken, usuarioControlador.removerParticipacao.bind(usuarioControlador));
+
 
 // Evento
 routes.get("/evento/filtrar", eventoControlador.filtrar.bind(eventoControlador));
@@ -46,10 +51,10 @@ routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador))
 
 routes.post("/evento", verificarToken, eventoControlador.criar.bind(eventoControlador));
 
-routes.put("/evento/:id/anunciar", eventoControlador.anunciar.bind(eventoControlador));
-routes.put("/evento/:id", eventoControlador.editar.bind(eventoControlador));
+routes.put("/evento/:id/anunciar", verificarToken, eventoControlador.anunciar.bind(eventoControlador));
+routes.put("/evento/:id", verificarToken, eventoControlador.editar.bind(eventoControlador));
 
-routes.delete("/evento/:id", eventoControlador.apagar.bind(eventoControlador));
+routes.delete("/evento/:id", verificarToken, eventoControlador.apagar.bind(eventoControlador));
 
 
 // Tipos
