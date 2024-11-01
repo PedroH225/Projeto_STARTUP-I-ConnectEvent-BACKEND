@@ -46,6 +46,12 @@ export class UsuarioControlador {
         res.json(eventos);
     }
 
+    async visualizarEventosUsuarioNaoAnunciado(req: Request, res: Response) { // Alterado para Usuario
+        const id = req.user.id;
+        const eventos = await this.service.visualizarEventosUsuarioNaoAnunciado(parseInt(id)); // Alterado para Usuario
+        res.json(eventos);
+    }
+
     async visualizarEventosOcorridos(req: Request, res: Response) {
         const id = req.user.id;
         const idInt = parseInt(id);

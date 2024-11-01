@@ -75,6 +75,18 @@ export class UsuarioServico {
         return eventosFormatados;
     }
 
+    async visualizarEventosUsuarioNaoAnunciado(id: number) { // Alterado para Usuario
+        const eventos = await this.eventoRepositorio.find({where: { organizador: {id : id}, isAnunciado: false, data : MoreThanOrEqual(new Date()) } }); // Alterado para Usuario
+ 
+        const eventosFormatados = eventos.map(evento => ({
+            ...evento,
+            data: Formatador.formatDate(evento.data), 
+            horario: Formatador.formatarHorario(evento.horario)
+        }));
+        
+        return eventosFormatados;
+    }
+
     async visualizarEventosOcorridos(usuarioId: number) {
         const eventos = await this.eventoRepositorio.find({
             where: { organizador: { id: usuarioId }, data: LessThanOrEqual(new Date()) }
