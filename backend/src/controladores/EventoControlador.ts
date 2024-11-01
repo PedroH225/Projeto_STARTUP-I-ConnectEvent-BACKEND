@@ -4,7 +4,7 @@ import { UsuarioServico } from "../servicos/UsuarioServico";
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
-    link: string, fotos: string[], local: string, estado: string, cidade: string, bairro: string, numero: number 
+    link: string, local: string, estado: string, cidade: string, bairro: string, numero: number 
 }
 
 type EditarEventoRequest = {
@@ -61,7 +61,8 @@ export class EventoControlador {
     }
 
     async criar(req: Request, res: Response): Promise<any> {
-        const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EventoRequest = req.body;
+        const { titulo, descricao, data, horario, tipo, telefone, livre, link, local, estado, cidade, bairro, numero }: EventoRequest = req.body;
+        const fotos = req.files as Express.Multer.File[];
         const id = parseInt(req.user.id)
 
         const organizador = await this.usuarioServico.visualizar(id);

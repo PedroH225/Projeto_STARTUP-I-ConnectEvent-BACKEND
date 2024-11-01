@@ -6,25 +6,26 @@ import { Foto } from "../entidades/Foto";
 import { Formatador } from '../utils/FormatadorDeData';
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 import { Usuario } from "../entidades/Usuario"; // Importando a nova entidade
+import { FotoServico } from "./FotoServico";
 
-type EventoRequest = {
-    titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
-    link: string, fotos: any[], local: string, estado: string, cidade: string, bairro: string, numero: number, organizador: Usuario // Alterado para Usuario
-}
+type EventoRequest = { titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, 
+    livre: boolean, link: string, fotos: Express.Multer.File[], local: string, 
+    estado: string, cidade: string, bairro: string, numero: number, organizador: Usuario
+ }
 
 type EditarEventoRequest = {
     id: number, titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
-    link: string, fotos: any[], local: string, estado: string, cidade: string, bairro: string, numero: number
+    link: string, fotos: Express.Multer.File[], local: string, estado: string, cidade: string, bairro: string, numero: number
 }
 
 export class EventoServico {
     private repositorio;
-    private fotoRepositorio;
+    private fotoServico;
     private endRepositorio;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Evento);
-        this.fotoRepositorio = AppDataSource.getRepository(Foto);
+        this.fotoServico = new FotoServico();
         this.endRepositorio = AppDataSource.getRepository(Endereco);
     }
 
@@ -115,7 +116,6 @@ export class EventoServico {
 
     async criar({ titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, organizador }: EventoRequest) { // Alterado para Usuario
         let evento = new Evento(titulo, descricao, data, horario, tipo, telefone, livre, link, false);
-        evento.fotos = [];
         const endereco = new Endereco(local, estado, cidade, bairro, numero);
 
         evento.endereco = endereco;
@@ -125,6 +125,12 @@ export class EventoServico {
         await ValidarFormulario.evento(evento);
 
         let eventoDb = await this.repositorio.save(evento);
+
+        
+        if (fotos && fotos.length > 0) {
+
+            await this.fotoServico.salvarFotos(fotos, eventoDb.id)
+        }
 
         return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
 
@@ -173,6 +179,11 @@ export class EventoServico {
 
         try {
             await ValidarFormulario.evento(evento);
+
+            if (fotos && fotos.length > 0) {
+                await this.fotoServico.salvarFotos(fotos, evento.id); // Aqui você chama o método para salvar fotos
+            }
+    
             
             let eventoDb = await this.repositorio.save(evento);
     

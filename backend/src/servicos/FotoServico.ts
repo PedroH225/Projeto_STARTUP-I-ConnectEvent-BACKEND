@@ -3,6 +3,7 @@ import { AppDataSource } from '../bd';
 import { Evento } from '../entidades/Evento';
 import { Foto } from '../entidades/Foto';
 import path from 'path';
+import fs from 'fs';
 
 export class FotoServico {
 
@@ -29,6 +30,22 @@ export class FotoServico {
 
     return Promise.all(fotosSalvas);
   }
+
+  async removerFotos(fotos: Foto[]) {
+    for (const foto of fotos) {
+        // Remove a foto do banco de dados
+        await this.fotoRepository.remove(foto);
+        
+        // Remove o arquivo do sistema de arquivos
+        const caminhoArquivo = path.join(__dirname, '..', '..', 'upload', foto.caminho); // Ajustado para o diretório correto
+        try {
+            await fs.promises.unlink(caminhoArquivo);
+            console.log(`Arquivo removido: ${caminhoArquivo}`);
+        } catch (err) {
+            console.error(`Erro ao remover o arquivo: ${caminhoArquivo}`, err);
+        }
+    }
+}
 
   async obterFotosPorEvento(eventoId: number) {
     return await this.fotoRepository.find({ where: { evento: { id: eventoId } } });
