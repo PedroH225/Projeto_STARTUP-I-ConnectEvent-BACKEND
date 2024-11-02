@@ -15,74 +15,72 @@ export class AmizadeControlodor {
 
     }
 
-    async enviar(req: Request, res: Response) {
-        const { remetenteId } = req.params;
+    async enviar(req: Request, res: Response): Promise<any> {
+        const remetenteId = req.user.id;
         const remetenteIdInt = parseInt(remetenteId);
-        
+
         const { destEmail } = req.body;
 
         try {
 
-        const destinatario : Usuario | any = await this.servico.visualizarPorEmail(destEmail);
+            const destinatario: Usuario | any = await this.servico.visualizarPorEmail(destEmail);
 
-        if (destinatario) {
-            await this.amizadeServico.enviar(remetenteIdInt, destinatario.id); 
-            
-            res.json("Pedido de amizade enviado.")
-        }
+            if (destinatario) {
+                await this.amizadeServico.enviar(remetenteIdInt, destinatario.id);
 
-        } catch (erro){
+                res.json("Pedido de amizade enviado.")
+            }
+
+        } catch (erro) {
             res.json(erro)
         }
     }
-    
-    async aceitar(req: Request, res: Response) {
-        const { remetenteId, destinatarioId } = req.params;
-        const remetenteIdInt = parseInt(remetenteId);
-        const destinatarioIdInt = parseInt(destinatarioId);
-    
+
+    async aceitar(req: Request, res: Response): Promise<any> {
+        const remetenteIdInt = parseInt(req.params.remetenteId);
+        const destinatarioIdInt = req.user.id;
+
+
         try {
             // Verifica se o pedido de amizade existe e está pendente
             const pedidoExistente = await this.amizadeServico.verificarPedido(remetenteIdInt, destinatarioIdInt);
-    
+
             if (!pedidoExistente) {
                 return res.status(404).json("Pedido de amizade não encontrado.");
             }
-    
+
             // Aceita o pedido de amizade
             await this.amizadeServico.aceitar(remetenteIdInt, destinatarioIdInt);
-    
+
             return res.json("Pedido de amizade aceito.");
         } catch (erro) {
             res.status(500).json({ message: "Erro ao aceitar o pedido de amizade.", erro });
         }
     }
 
-    async excluir(req: Request, res: Response) {
-        const { remetenteId, destinatarioId } = req.params;
-        const remetenteIdInt = parseInt(remetenteId);
-        const destinatarioIdInt = parseInt(destinatarioId);
-    
+    async excluir(req: Request, res: Response): Promise<any> {
+        const remetenteIdInt = parseInt(req.params.remetenteId);
+        const destinatarioIdInt = req.user.id
+
         try {
             // Verifica se o pedido de amizade existe
             const pedidoExistente = await this.amizadeServico.verificarPedido(remetenteIdInt, destinatarioIdInt);
-    
+
             if (!pedidoExistente) {
                 return res.status(404).json("Pedido de amizade não encontrado.");
             }
-    
+
             // Exclui o pedido de amizade
             await this.amizadeServico.excluir(remetenteIdInt, destinatarioIdInt);
-    
+
             return res.json("Pedido de amizade excluído.");
         } catch (erro) {
             res.status(500).json({ message: "Erro ao excluir o pedido de amizade.", erro });
         }
     }
 
-    async listarPendentes(req: Request, res: Response) {
-        const { usuarioId } = req.params;
-        const usuarioIdInt = parseInt(usuarioId);
+    async listarPendentes(req: Request, res: Response): Promise<any> {
+        const usuarioIdInt = req.user.id;
 
         try {
             const pedidosPendentes = await this.amizadeServico.listarPendentes(usuarioIdInt);
@@ -93,9 +91,8 @@ export class AmizadeControlodor {
     }
 
     // Método para listar amizades aceitas
-    async listarAceitos(req: Request, res: Response) {
-        const { usuarioId } = req.params;
-        const usuarioIdInt = parseInt(usuarioId);
+    async listarAceitos(req: Request, res: Response): Promise<any> {
+        const usuarioIdInt = req.user.id;
 
         try {
             const pedidosAceitos = await this.amizadeServico.listarAceitos(usuarioIdInt);
@@ -104,4 +101,18 @@ export class AmizadeControlodor {
             res.status(500).json({ message: "Erro ao listar amizades aceitas.", erro });
         }
     }
+
+    // Método para listar pedidos de amizade recebidos
+    async listarRecebidos(req: Request, res: Response): Promise<any> {
+        const usuarioIdInt = req.user.id; // Obtém o ID do usuário do token
+
+        try {
+            const pedidosRecebidos = await this.amizadeServico.listarRecebidos(usuarioIdInt);
+            return res.json(pedidosRecebidos);
+        } catch (erro) {
+            res.status(500).json({ message: "Erro ao listar pedidos de amizade recebidos.", erro });
+        }
+    }
+
+
 }

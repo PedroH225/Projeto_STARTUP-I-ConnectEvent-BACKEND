@@ -1,17 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity("amigos")
 export class PedidoAmizade {
+  @Column({name : "id" })
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({name : "user_id_1" })
   userIdSender: number;
 
-  @Column()
+  @Column({name : "user_id_2" })
   userIdReceiver: number;
 
-  @Column()
+  @Column({name : "status" })
   status: string;
 
   constructor(userIdSender: number, userIdReceiver: number, status: string = 'pendente') {
