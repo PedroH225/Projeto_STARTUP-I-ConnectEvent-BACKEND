@@ -53,7 +53,7 @@ routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador))
 routes.post("/evento", uploadLocal.array('fotos'), verificarToken, eventoControlador.criar.bind(eventoControlador));
 
 routes.put("/evento/:id/anunciar", verificarToken, eventoControlador.anunciar.bind(eventoControlador));
-routes.put("/evento/:id", verificarToken, eventoControlador.editar.bind(eventoControlador));
+routes.put("/evento/:id", uploadLocal.array('fotos'), verificarToken, eventoControlador.editar.bind(eventoControlador));
 
 routes.delete("/evento/:id", verificarToken, eventoControlador.apagar.bind(eventoControlador));
 
@@ -67,6 +67,9 @@ routes.get("/testartoken", verificarToken, usuarioControlador.testarToken.bind(u
 
 routes.post('/foto/:id/upload-fotos', uploadLocal.array('fotos', 10),fotoControlador.uploadFotos.bind(fotoControlador)); // Limite de 10 fotos
 routes.get('/foto/:id/fotos', fotoControlador.getFotosPorEvento.bind(fotoControlador));
+routes.get('/foto/evento/:id', fotoControlador.visualizarFotosEvento.bind(fotoControlador))
+
+routes.delete('/foto/:id', fotoControlador.apagar.bind(fotoControlador))
 
 
 export { routes };
