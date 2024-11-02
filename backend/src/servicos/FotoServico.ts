@@ -45,7 +45,6 @@ export class FotoServico {
   async removerFotos(fotosIds : number[]) {
     const fotos = await this.fotoRepository.find({ where: { id : In(fotosIds)}, relations:['evento']})
     
-    console.log(fotos);
     
     for (const foto of fotos) {
       await this.fotoRepository.delete( { id : foto.id});

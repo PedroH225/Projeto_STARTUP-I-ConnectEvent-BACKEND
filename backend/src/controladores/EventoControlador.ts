@@ -90,8 +90,6 @@ export class EventoControlador {
         const idInt = parseInt(req.params.id);
         const { titulo, descricao, data, horario, tipo, telefone, livre, link, local, estado, cidade, bairro, numero } : EditarEventoRequest = req.body;
         const fotosNovas = req.files as Express.Multer.File[];
-
-        console.log(idInt);
         
         try {
         const evento = await this.service.editar({ id: idInt, titulo, descricao, data, horario, tipo, telefone, livre, link, fotosNovas, local, estado, cidade, bairro, numero });
