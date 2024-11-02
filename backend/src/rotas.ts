@@ -50,7 +50,7 @@ routes.get("/evento/:eventoId/verificar-participacao", verificarToken, eventoCon
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));
 
-routes.post("/evento", verificarToken, eventoControlador.criar.bind(eventoControlador));
+routes.post("/evento", uploadLocal.array('fotos'), verificarToken, eventoControlador.criar.bind(eventoControlador));
 
 routes.put("/evento/:id/anunciar", verificarToken, eventoControlador.anunciar.bind(eventoControlador));
 routes.put("/evento/:id", verificarToken, eventoControlador.editar.bind(eventoControlador));
