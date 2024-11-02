@@ -108,9 +108,9 @@ export class EventoServico {
 
         const resultArray = await this.repositorio.find({
             where: whereConditions,
-            relations: ["endereco"]
+            relations: ["endereco", "fotos"]
         });
-
+        
         return resultArray;
     }
 
