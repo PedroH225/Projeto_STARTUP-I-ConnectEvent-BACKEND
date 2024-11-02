@@ -69,5 +69,7 @@ routes.post('/foto/:id/upload-fotos', uploadLocal.array('fotos', 10),fotoControl
 routes.get('/foto/:id/fotos', fotoControlador.getFotosPorEvento.bind(fotoControlador));
 routes.get('/foto/evento/:id', fotoControlador.visualizarFotosEvento.bind(fotoControlador))
 
+routes.delete('/foto/:id', fotoControlador.apagar.bind(fotoControlador))
+
 
 export { routes };

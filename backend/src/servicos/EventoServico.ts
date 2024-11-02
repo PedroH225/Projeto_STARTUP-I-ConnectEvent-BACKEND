@@ -15,7 +15,7 @@ type EventoRequest = { titulo: string, descricao: string, data: Date, horario: s
 
 type EditarEventoRequest = {
     id: number, titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
-    link: string, fotos: Express.Multer.File[], local: string, estado: string, cidade: string, bairro: string, numero: number
+    link: string, fotosNovas: Express.Multer.File[], local: string, estado: string, cidade: string, bairro: string, numero: number
 }
 
 export class EventoServico {
@@ -153,13 +153,13 @@ export class EventoServico {
         return "Evento anunciado com sucesso!";
     }
 
-    async editar({ id, titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero }: EditarEventoRequest) {
+    async editar({ id, titulo, descricao, data, horario, tipo, telefone, livre, link, fotosNovas, local, estado, cidade, bairro, numero }: EditarEventoRequest) {
         let evento = await this.repositorio.findOne({ where: { id: id }, relations: ["fotos", "endereco"] });
 
         if (!evento) {
             return new Error("O evento não existe.")
         }
-
+        
         evento.id = id;
         evento.titulo = titulo ? titulo : evento.titulo;
         evento.descricao = descricao ? descricao : evento.descricao;
@@ -176,20 +176,23 @@ export class EventoServico {
         evento.endereco.bairro = bairro ? bairro : evento.endereco.bairro;
         evento.endereco.numero = numero ? numero : evento.endereco.numero;
         evento.organizador = evento.organizador;
+        
 
         try {
             await ValidarFormulario.evento(evento);
 
-            if (fotos && fotos.length > 0) {
-                await this.fotoServico.salvarFotos(fotos, evento.id); // Aqui você chama o método para salvar fotos
-            }
-    
-            
             let eventoDb = await this.repositorio.save(evento);
-    
+
+            if (fotosNovas && fotosNovas.length > 0) {
+                await this.fotoServico.salvarFotos(fotosNovas, id); // Aqui você chama o método para salvar fotos
+            }
+            
+
             return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
 
         } catch (error) {
+            console.log(error);
+            
             throw error;
         }
     }

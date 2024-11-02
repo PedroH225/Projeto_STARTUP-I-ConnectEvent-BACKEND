@@ -9,7 +9,7 @@ type EventoRequest = {
 
 type EditarEventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
-    link: string, fotos: any[], local: string, estado: string, cidade: string, bairro: string, numero: number
+    link: string, local: string, estado: string, cidade: string, bairro: string, numero: number
 }
 
 export class EventoControlador {
@@ -87,13 +87,16 @@ export class EventoControlador {
     }
 
     async editar(req: Request, res: Response) {
-        const { id } = req.params;
-        const { titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero } : EditarEventoRequest = req.body;
+        const idInt = parseInt(req.params.id);
+        const { titulo, descricao, data, horario, tipo, telefone, livre, link, local, estado, cidade, bairro, numero } : EditarEventoRequest = req.body;
+        const fotosNovas = req.files as Express.Multer.File[];
 
+        console.log(idInt);
+        
         try {
-        const evento = await this.service.editar({ id: parseInt(id), titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero });
+        const evento = await this.service.editar({ id: idInt, titulo, descricao, data, horario, tipo, telefone, livre, link, fotosNovas, local, estado, cidade, bairro, numero });
 
-        res.json(evento);
+        res.status(200).json(evento);
         } catch (erros) {
             res.status(400).json(erros)
         }

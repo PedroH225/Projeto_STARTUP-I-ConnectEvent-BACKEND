@@ -38,7 +38,7 @@ export class FotoServico {
       const novaFoto = new Foto(path.basename(foto.path), evento); // Salva apenas o nome do arquivo
       return this.fotoRepository.save(novaFoto);
   });
-
+  
     return Promise.all(fotosSalvas);
   }
 
@@ -53,7 +53,7 @@ export class FotoServico {
         const caminhoArquivo = path.join(__dirname, '..', 'uploads', foto.caminho); // Ajustado para o diretório correto
         
         try {
-            await fs.promises.unlink(caminhoArquivo);
+            
 
             
 
@@ -63,6 +63,20 @@ export class FotoServico {
     } 
 
 }
+
+  async deletarFoto(id : number) {
+    const foto = await this.fotoRepository.findOne({ where : { id : id}})
+    
+
+    if (foto) {
+      await this.fotoRepository.delete(id)
+
+      const caminhoArquivo = path.join(__dirname, '..', 'uploads', foto.caminho); // Ajustado para o diretório correto
+
+      await fs.promises.unlink(caminhoArquivo);
+    }
+    return "Foto removida";
+  }
 
   async obterFotosPorEvento(eventoId: number) {
     return await this.fotoRepository.find({ where: { evento: { id: eventoId } } });

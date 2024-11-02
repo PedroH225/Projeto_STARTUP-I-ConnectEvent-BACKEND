@@ -39,12 +39,12 @@ export class FotoControlador {
       return res.status(400).json({ message: 'ID do evento inválido.' });
     }
     try {
-      const fotos = await this.fotoServico.visualizarFotoEvento(eventoId) 
+      const fotos = await this.fotoServico.visualizarFotoEvento(eventoId)
 
-        res.status(200).json(fotos)
+      res.status(200).json(fotos)
 
-    } catch (error : Error | any) {
-      res.status(500).json({ message : error.message})
+    } catch (error: Error | any) {
+      res.status(500).json({ message: error.message })
     }
   }
 
@@ -65,5 +65,13 @@ export class FotoControlador {
     } catch (err: Error | any) {
       res.status(500).json({ message: err.message });
     }
+  }
+
+  async apagar(req: Request, res: Response): Promise<any> {
+    const id = parseInt(req.params.id)
+
+    await this.fotoServico.deletarFoto(id)
+
+    return "Foto excluída com sucesso.";
   }
 }
