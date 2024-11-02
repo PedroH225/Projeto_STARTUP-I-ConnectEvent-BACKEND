@@ -6,6 +6,7 @@ import { TipoControlador } from './controladores/TipoControlador';
 import { verificarToken } from './utils/VerificarToken';
 import uploadLocal from './utils/uploadLocal';
 import { FotoControlador } from './controladores/FotoControlador';
+import { AmizadeControlodor } from './controladores/AmizadeControlador';
 
 const routes = Router();
 
@@ -14,6 +15,7 @@ const usuarioControlador = new UsuarioControlador();
 const eventoControlador = new EventoControlador();
 const tipoControlador = new TipoControlador();
 const fotoControlador = new FotoControlador();
+const amizadeControlador = new AmizadeControlodor();
 
 
 // Endereço
@@ -70,6 +72,17 @@ routes.get('/foto/:id/fotos', fotoControlador.getFotosPorEvento.bind(fotoControl
 routes.get('/foto/evento/:id', fotoControlador.visualizarFotosEvento.bind(fotoControlador))
 
 routes.delete('/foto/:id', fotoControlador.apagar.bind(fotoControlador))
+
+
+// Amizade
+routes.get('/amigo/pendentes', verificarToken, amizadeControlador.listarPendentes.bind(amizadeControlador))
+routes.get('/amigo/aceitos', verificarToken, amizadeControlador.listarAceitos.bind(amizadeControlador))
+routes.get('/pedidos-recebidos', verificarToken, amizadeControlador.listarRecebidos.bind(amizadeControlador));
+
+routes.post('/pedidos-amizade/enviar', verificarToken, amizadeControlador.enviar.bind(amizadeControlador));
+routes.post('/pedidos-amizade/aceitar/:remetenteId', verificarToken, amizadeControlador.aceitar.bind(amizadeControlador));
+
+routes.delete('/pedidos-amizade/excluir/:remetenteId', verificarToken, amizadeControlador.excluir.bind(amizadeControlador));
 
 
 export { routes };

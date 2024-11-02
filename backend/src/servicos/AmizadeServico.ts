@@ -1,3 +1,4 @@
+import { In } from "typeorm";
 import { AppDataSource } from "../bd";
 import { PedidoAmizade } from "../entidades/PedidoAmizade";
 import { Usuario } from "../entidades/Usuario";
@@ -5,9 +6,11 @@ import { Usuario } from "../entidades/Usuario";
 export class AmizadeServico {
 
     private repository;
+    private usuarioRepository;
 
     constructor() {
         this.repository = AppDataSource.getRepository(PedidoAmizade)
+        this.usuarioRepository = AppDataSource.getRepository(Usuario)
     }
 
     async enviar(remetenteId: number, destinatarioId: number) {
@@ -36,21 +39,71 @@ export class AmizadeServico {
     }
 
     async listarPendentes(usuarioId: number) {
-        return await this.repository.find({
+        const pedidos = await this.repository.find({
             where: [
-                { userIdSender: usuarioId, status: 'pendente' },
-                { userIdReceiver: usuarioId, status: 'pendente' }
+                { userIdSender: usuarioId, status: 'pendente' }
             ],
         });
+
+        let amigos : number[] = []
+
+        pedidos.forEach(pedido => {
+            if (pedido.userIdSender !== usuarioId) {
+                amigos.push(pedido.userIdSender);
+            }
+            if (pedido.userIdReceiver !== usuarioId) {
+                amigos.push(pedido.userIdReceiver);
+            }
+        });
+
+        const amigosSet = [...new Set(amigos)];
+        
+        return await this.usuarioRepository.find({ where: { id: In(amigosSet) } });
     }
 
     // Lista de amizades já aceitas de um usuário
     async listarAceitos(usuarioId: number) {
-        return await this.repository.find({
+        const pedidos = await this.repository.find({
             where: [
                 { userIdSender: usuarioId, status: 'aceito' },
                 { userIdReceiver: usuarioId, status: 'aceito' }
             ],
         });
+
+        let amigos : number[] = []
+
+        pedidos.forEach(pedido => {
+            if (pedido.userIdSender !== usuarioId) {
+                amigos.push(pedido.userIdSender);
+            }
+            if (pedido.userIdReceiver !== usuarioId) {
+                amigos.push(pedido.userIdReceiver);
+            }
+        });
+
+        const amigosSet = [...new Set(amigos)];
+        
+        return await this.usuarioRepository.find({ where: { id: In(amigosSet) } });
+    }
+
+    async listarRecebidos(usuarioId: number) {
+        const pedidos = await this.repository.find({
+            where: { userIdReceiver: usuarioId, status: 'pendente' }  // Inclui informações do remetente, se necessário
+        });
+
+        let amigos : number[] = []
+
+        pedidos.forEach(pedido => {
+            if (pedido.userIdSender !== usuarioId) {
+                amigos.push(pedido.userIdSender);
+            }
+            if (pedido.userIdReceiver !== usuarioId) {
+                amigos.push(pedido.userIdReceiver);
+            }
+        });
+
+        const amigosSet = [...new Set(amigos)];
+        
+        return await this.usuarioRepository.find({ where: { id: In(amigosSet) } });
     }
 }
