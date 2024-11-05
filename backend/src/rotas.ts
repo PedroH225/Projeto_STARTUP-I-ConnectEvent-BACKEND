@@ -3,7 +3,7 @@ import { EnderecoControlador } from './controladores/EnderecoControlador';
 import { UsuarioControlador } from './controladores/UsuarioControlador';
 import { EventoControlador } from './controladores/EventoControlador';
 import { TipoControlador } from './controladores/TipoControlador';
-import { verificarToken } from './utils/VerificarToken';
+import { verificarToken, verificarTokenBoolean } from './utils/VerificarToken';
 import uploadLocal from './utils/uploadLocal';
 import { FotoControlador } from './controladores/FotoControlador';
 import { AmizadeControlodor } from './controladores/AmizadeControlador';
@@ -47,7 +47,7 @@ routes.put("/usuario/removerParticipar/:eventoId", verificarToken, usuarioContro
 
 // Evento
 routes.get("/evento/filtrar", eventoControlador.filtrar.bind(eventoControlador));
-routes.get("/evento/anunciados", eventoControlador.visualizarAnunciados.bind(eventoControlador));
+routes.get("/evento/anunciados", verificarTokenBoolean, eventoControlador.visualizarAnunciados.bind(eventoControlador));
 routes.get("/evento/:eventoId/verificar-participacao", verificarToken, eventoControlador.verificarParticipacao.bind(eventoControlador));
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));

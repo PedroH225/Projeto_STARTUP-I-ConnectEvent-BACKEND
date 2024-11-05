@@ -27,7 +27,10 @@ export class EventoControlador {
     }
 
     async visualizarAnunciados(req: Request, res: Response) {
-        const eventos = await this.service.visualizarAnunciados();
+        const idInt = parseInt(req.user?.id)
+        
+        const eventos = await this.service.visualizarAnunciados(idInt);
+        
         res.json(eventos);
     }
 
