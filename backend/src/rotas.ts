@@ -46,7 +46,7 @@ routes.put("/usuario/removerParticipar/:eventoId", verificarToken, usuarioContro
 
 
 // Evento
-routes.get("/evento/filtrar", eventoControlador.filtrar.bind(eventoControlador));
+routes.get("/evento/filtrar", verificarTokenBoolean, eventoControlador.filtrar.bind(eventoControlador));
 routes.get("/evento/anunciados", verificarTokenBoolean, eventoControlador.visualizarAnunciados.bind(eventoControlador));
 routes.get("/evento/:eventoId/verificar-participacao", verificarToken, eventoControlador.verificarParticipacao.bind(eventoControlador));
 routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));

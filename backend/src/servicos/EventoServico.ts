@@ -101,9 +101,18 @@ export class EventoServico {
         return estaParticipando;
     }
 
-    async filtrar(titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
+    async filtrar(id: number, titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
         const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
 
+        if (id) {
+            const usuario = await this.usuarioServico.visualizar(id);
+            if (usuario) {
+                if (usuario.idade < 18) {
+                    whereConditions.livre = true;
+                }
+            }
+        }
+        
         if (titulo) {
             whereConditions.titulo = Like(`%${titulo}%`);
         }

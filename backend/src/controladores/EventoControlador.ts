@@ -30,7 +30,7 @@ export class EventoControlador {
         const idInt = parseInt(req.user?.id)
         
         const eventos = await this.service.visualizarAnunciados(idInt);
-        
+
         res.json(eventos);
     }
 
@@ -53,12 +53,13 @@ export class EventoControlador {
     }
 
     async filtrar(req: Request, res: Response) {
+        const idInt = parseInt(req.user?.id)
         const titulo = req.query.titulo as string;
         const tipo = req.query.tipo as string;
         const data = req.query.data ? new Date(req.query.data as string) : undefined;
         const cidade = req.query.cidade as string;
 
-        const eventos = await this.service.filtrar(titulo, tipo, data, cidade);
+        const eventos = await this.service.filtrar(idInt, titulo, tipo, data, cidade);
 
         res.json(eventos);
     }
