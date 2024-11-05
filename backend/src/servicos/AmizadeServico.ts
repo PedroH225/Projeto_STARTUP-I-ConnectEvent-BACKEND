@@ -14,12 +14,22 @@ export class AmizadeServico {
     }
 
     async enviar(remetenteId: number, destinatarioId: number) {
-
+        // Verifica se já existe um pedido de amizade entre os usuários
+        const pedidoExistente = await this.repository.findOne({
+            where: [
+                { userIdSender: remetenteId, userIdReceiver: destinatarioId },
+                { userIdSender: destinatarioId, userIdReceiver: remetenteId } // Caso a amizade seja bidirecional
+            ]
+        });
+    
+        if (pedidoExistente) {
+            throw ({ tipo:"amizadeErro", mensagem: "Usuário já adicionado."});
+        }
+    
         const pedido = new PedidoAmizade(remetenteId, destinatarioId);
-
-        await this.repository.save(pedido)
-
-        return "Pedido de amizade enviado."
+        await this.repository.save(pedido);
+    
+        return "Pedido de amizade enviado.";
     }
 
     async verificarPedido(remetenteId: number, destinatarioId: number) {
