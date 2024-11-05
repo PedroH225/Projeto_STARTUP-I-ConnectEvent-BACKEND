@@ -18,21 +18,23 @@ export class AmizadeControlodor {
     async enviar(req: Request, res: Response): Promise<any> {
         const remetenteId = req.user.id;
         const remetenteIdInt = parseInt(remetenteId);
-
         const { destEmail } = req.body;
-
+    
         try {
-
-            const destinatario: Usuario | any = await this.servico.visualizarPorEmail(destEmail);
-
+            const destinatario = await this.servico.visualizarPorEmail(destEmail);
+            
             if (destinatario) {
+                console.log("Destinatário encontrado:", destinatario); // Log para verificar
                 await this.amizadeServico.enviar(remetenteIdInt, destinatario.id);
-
-                res.json("Pedido de amizade enviado.")
+                res.status(200).json("Pedido de amizade enviado.");
+            } else {
+                console.log("Destinatário não encontrado.");
+                res.status(404).json({ error: "Destinatário não encontrado." });
             }
-
+    
         } catch (erro) {
-            res.json(erro)
+            console.error("Erro ao enviar pedido de amizade:", erro); // Log de erro
+            res.status(500).json({ error: "Erro ao processar o pedido de amizade." });
         }
     }
 

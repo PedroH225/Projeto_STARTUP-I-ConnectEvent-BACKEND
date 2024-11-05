@@ -18,6 +18,8 @@ export class AmizadeServico {
         const pedido = new PedidoAmizade(remetenteId, destinatarioId);
 
         await this.repository.save(pedido)
+
+        return "Pedido de amizade enviado."
     }
 
     async verificarPedido(remetenteId: number, destinatarioId: number) {
