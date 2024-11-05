@@ -7,6 +7,7 @@ import { Formatador } from '../utils/FormatadorDeData';
 import { ValidarFormulario } from "../utils/ValidarFormulario";
 import { Usuario } from "../entidades/Usuario"; // Importando a nova entidade
 import { FotoServico } from "./FotoServico";
+import { UsuarioServico } from "./UsuarioServico";
 
 type EventoRequest = { titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, 
     livre: boolean, link: string, fotos: Express.Multer.File[], local: string, 
@@ -22,11 +23,13 @@ export class EventoServico {
     private repositorio;
     private fotoServico;
     private endRepositorio;
+    private usuarioServico;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Evento);
         this.fotoServico = new FotoServico();
         this.endRepositorio = AppDataSource.getRepository(Endereco);
+        this.usuarioServico = new UsuarioServico;
     }
 
     async visualizarTodos() {
@@ -41,8 +44,22 @@ export class EventoServico {
         return eventosFormatados;
     }
 
-    async visualizarAnunciados() {
-        const eventos = await this.repositorio.find({where: { isAnunciado : true, data : MoreThanOrEqual(new Date()) }, relations: ["endereco", "fotos"] });
+
+    async visualizarAnunciados(id: number) {
+        const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
+        whereConditions.isAnunciado = true;
+        whereConditions.data = MoreThanOrEqual(new Date());
+        
+        if (id) {
+            const usuario = await this.usuarioServico.visualizar(id);
+            if (usuario) {
+                if (usuario.idade < 18) {
+                    whereConditions.livre = true;
+                }
+            }
+        }
+    
+        const eventos = await this.repositorio.find({where: whereConditions, relations: ["endereco", "fotos"] });
         
         const eventosFormatados = eventos.map(evento => ({
             ...evento,

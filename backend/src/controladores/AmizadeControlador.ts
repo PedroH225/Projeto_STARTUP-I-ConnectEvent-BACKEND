@@ -18,24 +18,28 @@ export class AmizadeControlodor {
     async enviar(req: Request, res: Response): Promise<any> {
         const remetenteId = req.user.id;
         const remetenteIdInt = parseInt(remetenteId);
-
         const { destEmail } = req.body;
-
+    
         try {
-
-            const destinatario: Usuario | any = await this.servico.visualizarPorEmail(destEmail);
-
+            const destinatario = await this.servico.visualizarPorEmail(destEmail);
+            
             if (destinatario) {
                 await this.amizadeServico.enviar(remetenteIdInt, destinatario.id);
-
-                res.json("Pedido de amizade enviado.")
+                res.status(200).json("Pedido de amizade enviado.");
+            } else {
+                return res.status(404).json({ tipo: "amizadeErro", mensagem: "Usuário não encontrado" });
             }
-
-        } catch (erro) {
-            res.json(erro)
+    
+        } catch (erro : any) {
+            // Verifica se o erro é do tipo amizadeErro
+            if (erro.tipo === "amizadeErro") {
+                return res.status(409).json(erro); // Retorna erro de conflito
+            }
+    
+            res.status(500).json({ error: "Erro ao processar o pedido de amizade." });
         }
     }
-
+    
     async aceitar(req: Request, res: Response): Promise<any> {
         const remetenteIdInt = parseInt(req.params.remetenteId);
         const destinatarioIdInt = req.user.id;

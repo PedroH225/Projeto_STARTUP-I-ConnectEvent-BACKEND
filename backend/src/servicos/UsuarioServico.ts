@@ -104,9 +104,9 @@ export class UsuarioServico {
     async visualizarPorEmail(email: string) {
         try {
             const usuario = await this.repositorio.findOne({ where: { email: email } });
-            return usuario;
+            return usuario || null;
         } catch {
-            return "Usuário não encontrado.";
+            return null;
         }
     }
 
