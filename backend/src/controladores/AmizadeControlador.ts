@@ -24,7 +24,6 @@ export class AmizadeControlodor {
             const destinatario = await this.servico.visualizarPorEmail(destEmail);
             
             if (destinatario) {
-                console.log("Destinatário encontrado:", destinatario); // Log para verificar
                 await this.amizadeServico.enviar(remetenteIdInt, destinatario.id);
                 res.status(200).json("Pedido de amizade enviado.");
             } else {
@@ -37,7 +36,6 @@ export class AmizadeControlodor {
                 return res.status(409).json(erro); // Retorna erro de conflito
             }
     
-            console.error("Erro ao processar pedido de amizade:", erro);
             res.status(500).json({ error: "Erro ao processar o pedido de amizade." });
         }
     }
