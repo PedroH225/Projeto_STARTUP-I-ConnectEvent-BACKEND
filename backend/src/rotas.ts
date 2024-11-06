@@ -49,7 +49,7 @@ routes.put("/usuario/removerParticipar/:eventoId", verificarToken, usuarioContro
 routes.get("/evento/filtrar", verificarTokenBoolean, eventoControlador.filtrar.bind(eventoControlador));
 routes.get("/evento/anunciados", verificarTokenBoolean, eventoControlador.visualizarAnunciados.bind(eventoControlador));
 routes.get("/evento/:eventoId/verificar-participacao", verificarToken, eventoControlador.verificarParticipacao.bind(eventoControlador));
-routes.get("/evento/:id", eventoControlador.visualizar.bind(eventoControlador));
+routes.get("/evento/:id", verificarTokenBoolean, eventoControlador.visualizar.bind(eventoControlador));
 routes.get("/evento", eventoControlador.visualizarTodos.bind(eventoControlador));
 
 routes.post("/evento", uploadLocal.array('fotos'), verificarToken, eventoControlador.criar.bind(eventoControlador));

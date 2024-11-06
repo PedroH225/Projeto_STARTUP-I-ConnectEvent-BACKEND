@@ -1,4 +1,4 @@
-import { Like, MoreThanOrEqual } from "typeorm";
+import { In, Like, MoreThanOrEqual } from "typeorm";
 import { AppDataSource } from "../bd";
 import { Endereco } from "../entidades/Endereco";
 import { Evento } from "../entidades/Evento";
@@ -8,11 +8,13 @@ import { ValidarFormulario } from "../utils/ValidarFormulario";
 import { Usuario } from "../entidades/Usuario"; // Importando a nova entidade
 import { FotoServico } from "./FotoServico";
 import { UsuarioServico } from "./UsuarioServico";
+import { AmizadeServico } from "./AmizadeServico";
 
-type EventoRequest = { titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, 
-    livre: boolean, link: string, fotos: Express.Multer.File[], local: string, 
+type EventoRequest = {
+    titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string,
+    livre: boolean, link: string, fotos: Express.Multer.File[], local: string,
     estado: string, cidade: string, bairro: string, numero: number, organizador: Usuario
- }
+}
 
 type EditarEventoRequest = {
     id: number, titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string, livre: boolean,
@@ -24,23 +26,25 @@ export class EventoServico {
     private fotoServico;
     private endRepositorio;
     private usuarioServico;
+    private amizadeServico;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Evento);
         this.fotoServico = new FotoServico();
         this.endRepositorio = AppDataSource.getRepository(Endereco);
         this.usuarioServico = new UsuarioServico;
+        this.amizadeServico = new AmizadeServico;
     }
 
     async visualizarTodos() {
         const eventos = await this.repositorio.find({ relations: ["endereco", "fotos"] });
-        
+
         const eventosFormatados = eventos.map(evento => ({
             ...evento,
-            data: Formatador.formatDate(evento.data), 
+            data: Formatador.formatDate(evento.data),
             horario: Formatador.formatarHorario(evento.horario)
         }));
-        
+
         return eventosFormatados;
     }
 
@@ -49,46 +53,86 @@ export class EventoServico {
         const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
         whereConditions.isAnunciado = true;
         whereConditions.data = MoreThanOrEqual(new Date());
-        
+        let usuario;
+        let amigos;
+
         if (id) {
-            const usuario = await this.usuarioServico.visualizar(id);
+            usuario = await this.usuarioServico.visualizar(id);
             if (usuario) {
                 if (usuario.idade < 18) {
                     whereConditions.livre = true;
                 }
+
+                amigos = await this.amizadeServico.listarAceitos(id)
+
             }
         }
-    
-        const eventos = await this.repositorio.find({where: whereConditions, relations: ["endereco", "fotos"] });
-        
+
+        const eventos = await this.repositorio.find({ where: whereConditions, relations: ["endereco", "fotos", "participantes"] });
+
+        if (amigos && amigos.length > 0) {
+            const amigoIds = amigos.map(amigo => amigo.id);
+
+            // Filtrar os participantes de cada evento
+            eventos.forEach(evento => {
+                evento.participantes = evento.participantes.filter(participante =>
+                    amigoIds.includes(participante.id)
+                );
+            });
+        } else {
+            eventos.forEach(evento => {
+                evento.participantes = []
+            })
+        }
+
         const eventosFormatados = eventos.map(evento => ({
             ...evento,
-            data: Formatador.formatDate(evento.data), 
+            data: Formatador.formatDate(evento.data),
             horario: Formatador.formatarHorario(evento.horario)
         }));
-        
+
         return eventosFormatados;
     }
 
-    async visualizar(id: number) {
-        const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["endereco", "fotos", "organizador"] });
+    async visualizar(id: number, usuarioId: number) {
+        const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["endereco", "fotos", "organizador", "participantes"] });
+
+        let amigos;
+
+        if (usuarioId) {
+            amigos = await this.amizadeServico.listarAceitos(usuarioId)
+
+        }
 
         if (!evento) {
             throw new Error("Evento não encontrado!")
         }
+
+        if (amigos && amigos.length > 0) {
+            const amigoIds = amigos.map(amigo => amigo.id);
+
+            // Filtrar os participantes de cada evento
+
+            evento.participantes = evento.participantes.filter(participante =>
+                amigoIds.includes(participante.id)
+            );
+        } else {
+            evento.participantes = []
+        }
+
 
         const eventoFormatado = {
             ...evento,
             data: Formatador.formatDate(evento.data), // Formata a data
             horario: Formatador.formatarHorario(evento.horario)
         };
-        
+
         return eventoFormatado; // Retorna o evento formatado
     }
 
     async verificarParticipacao(usuarioId: number, eventoId: number): Promise<boolean> {
-        const evento = await this.repositorio.findOne({ 
-            where: { id: eventoId }, 
+        const evento = await this.repositorio.findOne({
+            where: { id: eventoId },
             relations: ["participantes"] // Certifique-se de que a relação com participantes está carregada
         });
 
@@ -101,8 +145,9 @@ export class EventoServico {
         return estaParticipando;
     }
 
-    async filtrar(id: number, titulo ?: string, tipo?: string, data?: Date, cidade?: string) {
+    async filtrar(id: number, titulo?: string, tipo?: string, data?: Date, cidade?: string) {
         const whereConditions: any = {}; // Objeto para armazenar as condições de filtro
+        let amigos;
 
         if (id) {
             const usuario = await this.usuarioServico.visualizar(id);
@@ -110,9 +155,12 @@ export class EventoServico {
                 if (usuario.idade < 18) {
                     whereConditions.livre = true;
                 }
+
+                amigos = await this.amizadeServico.listarAceitos(id)
+
             }
         }
-        
+
         if (titulo) {
             whereConditions.titulo = Like(`%${titulo}%`);
         }
@@ -132,12 +180,27 @@ export class EventoServico {
 
         whereConditions.isAnunciado = true;
 
-        const resultArray = await this.repositorio.find({
+        const eventos = await this.repositorio.find({
             where: whereConditions,
-            relations: ["endereco", "fotos"]
+            relations: ["endereco", "fotos", "participantes"]
         });
-        
-        return resultArray;
+
+        if (amigos && amigos.length > 0) {
+            const amigoIds = amigos.map(amigo => amigo.id);
+
+            // Filtrar os participantes de cada evento
+            eventos.forEach(evento => {
+                evento.participantes = evento.participantes.filter(participante =>
+                    amigoIds.includes(participante.id)
+                );
+            });
+        } else {
+            eventos.forEach(evento => {
+                evento.participantes = []
+            })
+        }
+
+        return eventos;
     }
 
     async criar({ titulo, descricao, data, horario, tipo, telefone, livre, link, fotos, local, estado, cidade, bairro, numero, organizador }: EventoRequest) { // Alterado para Usuario
@@ -148,25 +211,25 @@ export class EventoServico {
         evento.organizador = organizador; // Alterado para Usuario
 
         try {
-        await ValidarFormulario.evento(evento);
+            await ValidarFormulario.evento(evento);
 
-        let eventoDb = await this.repositorio.save(evento);
+            let eventoDb = await this.repositorio.save(evento);
 
-        
-        if (fotos && fotos.length > 0) {
 
-            await this.fotoServico.salvarFotos(fotos, eventoDb.id)
+            if (fotos && fotos.length > 0) {
+
+                await this.fotoServico.salvarFotos(fotos, eventoDb.id)
+            }
+
+            return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
+
+        } catch (error) {
+            throw error;
         }
-
-        return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
-
-    } catch (error) {
-        throw error;
-    }
     }
 
-    async anunciar (id: number) {
-        const evento = await this.repositorio.findOne({where : {id : id}})
+    async anunciar(id: number) {
+        const evento = await this.repositorio.findOne({ where: { id: id } })
 
         if (!evento) {
             throw new Error("Evento não encontrado.")
@@ -175,7 +238,7 @@ export class EventoServico {
         evento.isAnunciado = true;
 
         await this.repositorio.save(evento);
-        
+
         return "Evento anunciado com sucesso!";
     }
 
@@ -185,7 +248,7 @@ export class EventoServico {
         if (!evento) {
             return new Error("O evento não existe.")
         }
-        
+
         evento.id = id;
         evento.titulo = titulo ? titulo : evento.titulo;
         evento.descricao = descricao ? descricao : evento.descricao;
@@ -202,7 +265,7 @@ export class EventoServico {
         evento.endereco.bairro = bairro ? bairro : evento.endereco.bairro;
         evento.endereco.numero = numero ? numero : evento.endereco.numero;
         evento.organizador = evento.organizador;
-        
+
 
         try {
             await ValidarFormulario.evento(evento);
@@ -212,19 +275,19 @@ export class EventoServico {
             if (fotosNovas && fotosNovas.length > 0) {
                 await this.fotoServico.salvarFotos(fotosNovas, id); // Aqui você chama o método para salvar fotos
             }
-            
+
 
             return await this.repositorio.findOne({ where: { id: eventoDb.id }, relations: ["fotos", "endereco"] });
 
         } catch (error) {
             console.log(error);
-            
+
             throw error;
         }
     }
 
     async apagar(id: number) {
-        let evento = await this.visualizar(id);
+        let evento = await this.repositorio.findOne({ where: { id: id } })
         if (!evento) {
             return new Error("Evento não encontrado.");
         }
