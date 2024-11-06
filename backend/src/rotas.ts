@@ -7,6 +7,7 @@ import { verificarToken, verificarTokenBoolean } from './utils/VerificarToken';
 import uploadLocal from './utils/uploadLocal';
 import { FotoControlador } from './controladores/FotoControlador';
 import { AmizadeControlodor } from './controladores/AmizadeControlador';
+import { GraficoControlador } from './controladores/GraficoControlador';
 
 const routes = Router();
 
@@ -16,6 +17,7 @@ const eventoControlador = new EventoControlador();
 const tipoControlador = new TipoControlador();
 const fotoControlador = new FotoControlador();
 const amizadeControlador = new AmizadeControlodor();
+const graficoControlador = new GraficoControlador();
 
 
 // Endereço
@@ -83,6 +85,9 @@ routes.post('/pedidos-amizade/enviar', verificarToken, amizadeControlador.enviar
 routes.post('/pedidos-amizade/aceitar/:remetenteId', verificarToken, amizadeControlador.aceitar.bind(amizadeControlador));
 
 routes.delete('/pedidos-amizade/excluir/:remetenteId', verificarToken, amizadeControlador.excluir.bind(amizadeControlador));
+
+// Grafico
+routes.get('/grafico/pizza-genero/:id', graficoControlador.graficoPizzaGenero.bind(graficoControlador));
 
 
 export { routes };
