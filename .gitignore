@@ -1,0 +1,36 @@
+# Ignorar ambiente virtual (diretório bin, lib, include, pyvenv.cfg)
+back-estatisticas/env-back-estatisticas/
+
+# Ignorar arquivos de configuração específicos do Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de banco de dados
+*.sqlite3
+
+# Ignorar configurações do IDE (exemplo com VSCode, PyCharm, etc.)
+.vscode/
+.idea/
+
+# Ignorar pastas de compilação do Python
+build/
+dist/
+eggs/
+*.egg-info/
+
+# Ignorar arquivos de testes temporários
+*.coverage
+*.tox/
+*.nox/
+*.coverage.*
+*.hypothesis/
+
+# Ignorar arquivos de dependências
+*.db
+*.csv
+*.tsv
