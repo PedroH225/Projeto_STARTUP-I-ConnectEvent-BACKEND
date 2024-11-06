@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
+
 import matplotlib
 matplotlib.use('Agg')
-
+from matplotlib.ticker import MaxNLocator
 import matplotlib.pyplot as plt
+
 from typing import List
 from io import BytesIO
 from fastapi.responses import StreamingResponse
@@ -47,8 +49,8 @@ class Usuario(BaseModel):
     estado: str
     cidade: str
 
-@app.post("/generate-pie-chart")
-def generate_pie_chart(usuarios: list[Usuario]):
+@app.post("/gerar-pizza-genero")
+def gerarGraficoPizzaGenero(usuarios: list[Usuario]):
     # Contando a quantidade de cada gênero
     generos = [usuario.genero for usuario in usuarios]
     contagem_generos = Counter(generos)
@@ -62,7 +64,7 @@ def generate_pie_chart(usuarios: list[Usuario]):
     plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=['skyblue', 'lightcoral', 'lightgreen'])
 
     # Título
-    plt.title('Distribuição de Gênero dos Usuários')
+    plt.title('Distribuição de Gênero dos Participantes')
 
     # Salvando o gráfico em um buffer de bytes
     buffer = BytesIO()
@@ -75,17 +77,20 @@ def generate_pie_chart(usuarios: list[Usuario]):
 
 
 # Endpoint para gerar o gráfico de distribuição de idade
-@app.post("/generate-age-distribution")
-def generate_age_distribution(usuarios: list[Usuario]):
+@app.post("/gerar-histo-idade")
+def gerarHistogramaIdade(usuarios: list[Usuario]):
     # Extraindo as idades dos participantes
     idades = [usuario.idade for usuario in usuarios]
     
     # Criando o histograma de idades
     plt.figure(figsize=(10, 6))
-    plt.hist(idades, bins=range(min(idades), max(idades) + 4, 4), color='skyblue', edgecolor='black', alpha=0.7)
+    plt.hist(idades, bins=range(min(idades), max(idades) + 2, 2), color='skyblue', edgecolor='black', alpha=0.7)
     plt.xlabel("Faixa Etária")
     plt.ylabel("Número de Participantes")
     plt.title("Distribuição de Idade dos Participantes")
+
+    plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
     # Salvando o gráfico em um buffer de bytes
     buffer = BytesIO()
