@@ -89,6 +89,7 @@ routes.delete('/pedidos-amizade/excluir/:remetenteId', verificarToken, amizadeCo
 // Grafico
 routes.get('/grafico/pizza-genero/:id', graficoControlador.graficoPizzaGenero.bind(graficoControlador));
 routes.get('/grafico/histograma-idade/:id', graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
+routes.get('/grafico/linha-participados/:id', graficoControlador.graficoLinha.bind(graficoControlador));
 
 
 
