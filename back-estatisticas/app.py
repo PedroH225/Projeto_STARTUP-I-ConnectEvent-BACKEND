@@ -100,3 +100,55 @@ def gerarHistogramaIdade(usuarios: list[Usuario]):
 
     # Retornando o gráfico como uma imagem
     return StreamingResponse(buffer, media_type="image/png")
+
+class Participacao(BaseModel):
+    usuarioId: int
+    eventoId: int
+    data: str  # Data de participação
+
+@app.post("/gerar-linha-participados")
+def gerar_linha_participados(participacoes: List[Participacao]):
+    # Convertendo as participações para um DataFrame
+    df = pd.DataFrame([{
+        'usuarioId': p.usuarioId,
+        'eventoId': p.eventoId,
+        'data': p.data
+    } for p in participacoes])
+
+    # Convertendo a coluna 'data' para datetime
+    df['data'] = pd.to_datetime(df['data'])
+
+    # Agrupando os dados por dia
+    df['data_dia'] = df['data'].dt.date
+    participantes_por_dia = df.groupby('data_dia').size()
+
+    # Criando o gráfico de linha
+    plt.figure(figsize=(10, 6))
+    
+    # Convertendo as datas para datetime antes de plotar
+    participantes_por_dia.index = pd.to_datetime(participantes_por_dia.index)
+
+    plt.plot(participantes_por_dia.index, participantes_por_dia.values, marker='o', color='skyblue')
+
+    plt.xlabel("Data (Dia/Mês)")
+    plt.ylabel("Número de Participantes")
+    plt.title("Participantes por Dia ao Longo do Tempo")
+
+    # Ajustando o eixo Y para exibir apenas inteiros
+    plt.yticks(range(0, participantes_por_dia.max() + 1, 1))
+
+    # Ajustando o formato das datas no eixo X para dia/mês (DD/MM)
+    plt.xticks(participantes_por_dia.index, 
+               [date.strftime('%d/%m') for date in participantes_por_dia.index], 
+               rotation=45, ha='right')
+
+    # Salvando o gráfico em um buffer de bytes
+    buffer = BytesIO()
+    plt.savefig(buffer, format="png")
+    buffer.seek(0)
+    plt.close()
+
+    # Retornando o gráfico como uma imagem
+    return StreamingResponse(buffer, media_type="image/png")
+
+
