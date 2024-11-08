@@ -118,28 +118,28 @@ def gerar_linha_participados(participacoes: List[Participacao]):
     # Convertendo a coluna 'data' para datetime
     df['data'] = pd.to_datetime(df['data'])
 
-    # Agrupando os dados por dia
-    df['data_dia'] = df['data'].dt.date
-    participantes_por_dia = df.groupby('data_dia').size()
+    # Agrupando os dados por semana (freq='W' significa semanal)
+    df['data_semana'] = df['data'].dt.to_period('W').dt.start_time
+    participantes_por_semana = df.groupby('data_semana').size()
 
     # Criando o gráfico de linha
     plt.figure(figsize=(10, 6))
-    
+
     # Convertendo as datas para datetime antes de plotar
-    participantes_por_dia.index = pd.to_datetime(participantes_por_dia.index)
+    participantes_por_semana.index = pd.to_datetime(participantes_por_semana.index)
 
-    plt.plot(participantes_por_dia.index, participantes_por_dia.values, marker='o', color='skyblue')
+    plt.plot(participantes_por_semana.index, participantes_por_semana.values, marker='o', color='skyblue')
 
-    plt.xlabel("Data (Dia/Mês)")
+    plt.xlabel("Semana")
     plt.ylabel("Número de Participantes")
-    plt.title("Participantes por Dia ao Longo do Tempo")
+    plt.title("Participantes por Semana ao Longo do Tempo")
 
     # Ajustando o eixo Y para exibir apenas inteiros
-    plt.yticks(range(0, participantes_por_dia.max() + 1, 1))
+    plt.yticks(range(0, participantes_por_semana.max() + 1, 1))
 
-    # Ajustando o formato das datas no eixo X para dia/mês (DD/MM)
-    plt.xticks(participantes_por_dia.index, 
-               [date.strftime('%d/%m') for date in participantes_por_dia.index], 
+    # Ajustando o formato das datas no eixo X para semana (semana/mês)
+    plt.xticks(participantes_por_semana.index, 
+               [date.strftime('%d/%m') for date in participantes_por_semana.index], 
                rotation=45, ha='right')
 
     # Salvando o gráfico em um buffer de bytes
