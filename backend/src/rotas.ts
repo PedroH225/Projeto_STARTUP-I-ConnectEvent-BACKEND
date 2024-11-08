@@ -31,7 +31,7 @@ routes.get("/cidades", enderecoControlador.visualizarCidades.bind(enderecoContro
 routes.post("/usuario/login", usuarioControlador.realizarAcesso.bind(usuarioControlador));
 routes.post("/usuario", usuarioControlador.criar.bind(usuarioControlador));
 routes.get("/usuario/evento", verificarToken, usuarioControlador.visualizarEventosParticipando.bind(usuarioControlador));
-routes.get("/usuario/eventosAmigo/:id", usuarioControlador.visualizarEventosParticipandoAmigo.bind(usuarioControlador));
+routes.get("/usuario/eventosAmigo/:id", verificarToken, usuarioControlador.visualizarEventosParticipandoAmigo.bind(usuarioControlador));
 routes.get("/usuario/eventoOcorridos", verificarToken, usuarioControlador.visualizarEventosParticipandoOcorridos.bind(usuarioControlador));
 routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
 routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
