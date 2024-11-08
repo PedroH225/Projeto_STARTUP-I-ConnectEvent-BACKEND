@@ -31,6 +31,7 @@ routes.get("/cidades", enderecoControlador.visualizarCidades.bind(enderecoContro
 routes.post("/usuario/login", usuarioControlador.realizarAcesso.bind(usuarioControlador));
 routes.post("/usuario", usuarioControlador.criar.bind(usuarioControlador));
 routes.get("/usuario/evento", verificarToken, usuarioControlador.visualizarEventosParticipando.bind(usuarioControlador));
+routes.get("/usuario/eventosAmigo/:id", verificarToken, usuarioControlador.visualizarEventosParticipandoAmigo.bind(usuarioControlador));
 routes.get("/usuario/eventoOcorridos", verificarToken, usuarioControlador.visualizarEventosParticipandoOcorridos.bind(usuarioControlador));
 routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
 routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
@@ -87,9 +88,9 @@ routes.post('/pedidos-amizade/aceitar/:remetenteId', verificarToken, amizadeCont
 routes.delete('/pedidos-amizade/excluir/:remetenteId', verificarToken, amizadeControlador.excluir.bind(amizadeControlador));
 
 // Grafico
-routes.get('/grafico/pizza-genero/:id', graficoControlador.graficoPizzaGenero.bind(graficoControlador));
-routes.get('/grafico/histograma-idade/:id', graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
-routes.get('/grafico/linha-participados/:id', graficoControlador.graficoLinha.bind(graficoControlador));
+routes.get('/grafico/pizza-genero/:id', verificarToken, graficoControlador.graficoPizzaGenero.bind(graficoControlador));
+routes.get('/grafico/histograma-idade/:id', verificarToken, graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
+routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador.graficoLinha.bind(graficoControlador));
 
 
 

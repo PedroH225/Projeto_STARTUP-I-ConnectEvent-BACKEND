@@ -34,6 +34,17 @@ export class UsuarioControlador {
         }
     }
 
+    async visualizarEventosParticipandoAmigo(req: Request, res: Response) {
+        const id = req.params.id;
+        const idInt = parseInt(id);
+        try {
+        const eventos = await this.service.visualizarEventosParticipando(idInt);
+        res.json(eventos);
+        } catch (erro : Error | any) {
+            res.status(400).json( { mensagem : erro.message })
+        }
+    }
+
     async visualizarEventosParticipandoOcorridos(req: Request, res: Response) {
         const id = req.user.id;
         const idInt = parseInt(id);
