@@ -88,9 +88,9 @@ routes.post('/pedidos-amizade/aceitar/:remetenteId', verificarToken, amizadeCont
 routes.delete('/pedidos-amizade/excluir/:remetenteId', verificarToken, amizadeControlador.excluir.bind(amizadeControlador));
 
 // Grafico
-routes.get('/grafico/pizza-genero/:id', graficoControlador.graficoPizzaGenero.bind(graficoControlador));
-routes.get('/grafico/histograma-idade/:id', graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
-routes.get('/grafico/linha-participados/:id', graficoControlador.graficoLinha.bind(graficoControlador));
+routes.get('/grafico/pizza-genero/:id', verificarToken, graficoControlador.graficoPizzaGenero.bind(graficoControlador));
+routes.get('/grafico/histograma-idade/:id', verificarToken, graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
+routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador.graficoLinha.bind(graficoControlador));
 
 
 
