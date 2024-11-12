@@ -124,10 +124,10 @@ export class UsuarioControlador {
     }
 
     async editar(req: Request, res: Response) {
-        const { id } = req.params;
+        const idInt = parseInt(req.user.id);
+
         const { email, senha, nome, idade, genero, estado, cidade } = req.body;
         const idadeInt = parseInt(idade);
-        const idInt = parseInt(id);
 
         try {
             const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade });

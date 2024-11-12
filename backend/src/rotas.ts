@@ -35,7 +35,7 @@ routes.get("/usuario/eventosAmigo/:id", verificarToken, usuarioControlador.visua
 routes.get("/usuario/eventoOcorridos", verificarToken, usuarioControlador.visualizarEventosParticipandoOcorridos.bind(usuarioControlador));
 routes.get("/usuario", verificarToken, usuarioControlador.visualizar.bind(usuarioControlador));
 routes.get("/usuarios", usuarioControlador.visualizarTodos.bind(usuarioControlador));
-routes.put("/usuario/:id", usuarioControlador.editar.bind(usuarioControlador));
+routes.put("/usuario", verificarToken, usuarioControlador.editar.bind(usuarioControlador));
 routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador));
 
 routes.get("/organizador/ocorridos", verificarToken, usuarioControlador.visualizarEventosOcorridos.bind(usuarioControlador));
