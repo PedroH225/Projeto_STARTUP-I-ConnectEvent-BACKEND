@@ -33,8 +33,8 @@ routes.post("/usuario", usuarioControlador.criar.bind(usuarioControlador));
 routes.get("/usuario/evento", verificarToken, usuarioControlador.visualizarEventosParticipando.bind(usuarioControlador));
 routes.get("/usuario/eventosAmigo/:id", verificarToken, usuarioControlador.visualizarEventosParticipandoAmigo.bind(usuarioControlador));
 routes.get("/usuario/eventoOcorridos", verificarToken, usuarioControlador.visualizarEventosParticipandoOcorridos.bind(usuarioControlador));
-routes.get("/usuario/:id", usuarioControlador.visualizar.bind(usuarioControlador));
-routes.get("/usuario", usuarioControlador.visualizarTodos.bind(usuarioControlador));
+routes.get("/usuario", verificarToken, usuarioControlador.visualizar.bind(usuarioControlador));
+routes.get("/usuarios", usuarioControlador.visualizarTodos.bind(usuarioControlador));
 routes.put("/usuario/:id", usuarioControlador.editar.bind(usuarioControlador));
 routes.delete("/usuario/:id", usuarioControlador.apagar.bind(usuarioControlador));
 

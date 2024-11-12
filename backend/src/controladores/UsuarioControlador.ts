@@ -17,10 +17,11 @@ export class UsuarioControlador {
     }
 
     async visualizar(req: Request, res: Response) {
-        const { id } = req.params;
+        const id = req.user.id;
         const idInt = parseInt(id);
+
         const usuario = await this.service.visualizar(idInt);
-        res.json(usuario);
+        res.status(200).json(usuario);
     }
 
     async visualizarEventosParticipando(req: Request, res: Response) {
