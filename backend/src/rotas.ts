@@ -94,5 +94,4 @@ routes.get('/grafico/histograma-idade/:id', verificarToken, graficoControlador.g
 routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador.graficoLinha.bind(graficoControlador));
 
 
-
 export { routes };

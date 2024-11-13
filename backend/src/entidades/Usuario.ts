@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { Evento } from "./Evento";
 import { Notificacao } from "./Notificacao";
 import { Pessoa } from "./Pessoa";
+import { Feedback } from "./Feedback";
 
 @Entity("usuario")
 export class Usuario extends Pessoa {
@@ -48,6 +49,9 @@ export class Usuario extends Pessoa {
         }
     })
     notificacoes: Notificacao[];
+
+    @OneToMany(() => Feedback, feedback => feedback.usuario)
+    feedbacks!: Feedback[];
 
     constructor(
         id: number, email: string, senha: string, nome: string, 
