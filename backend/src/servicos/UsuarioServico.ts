@@ -223,7 +223,7 @@ export class UsuarioServico {
 
     async alterarSenha({ id,  senhaAtual, senhaNova, confirmarSenha } : AlterarSenhaRequest ) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
-
+        
         if (!usuario) {
             return new Error("O usuário não existe!");
         }
@@ -237,7 +237,7 @@ export class UsuarioServico {
             
             return "Senha alterada com sucesso"
         } catch (erro) {
-            return erro;
+            throw erro;
         }
 
     }

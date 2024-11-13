@@ -156,10 +156,10 @@ export class UsuarioControlador {
     }
 
     async alterarSenha(req: Request, res: Response) {
-        const id = req.params.id;
-        const idInt = parseInt(id);
-
-        const { senhaAtual, senhaNova, confirmarSenha } = req.body
+        const id = req.user.id;
+        const idInt = parseInt(id);        
+        
+        const { senhaAtual, senhaNova, confirmarSenha } = req.body        
 
         try {
         const result = await this.service.alterarSenha({ id: idInt, senhaAtual, senhaNova, confirmarSenha })
