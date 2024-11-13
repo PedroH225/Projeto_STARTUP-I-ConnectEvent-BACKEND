@@ -155,6 +155,21 @@ export class UsuarioControlador {
         }
     }
 
+    async alterarSenha(req: Request, res: Response) {
+        const id = req.params.id;
+        const idInt = parseInt(id);
+
+        const { senhaAtual, senhaNova, confirmarSenha } = req.body
+
+        try {
+        const result = await this.service.alterarSenha({ id: idInt, senhaAtual, senhaNova, confirmarSenha })
+            
+        res.status(200).json(result);
+        } catch (erro) {
+            res.status(400).json(erro);
+        }
+    }
+
     async validar(req: Request, res: Response) {
         const eventos: Evento[] = [];
         try {

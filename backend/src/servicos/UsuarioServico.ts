@@ -27,6 +27,13 @@ type UpdateUsuarioRequest = {
     cidade: string;
 }
 
+type AlterarSenhaRequest = {
+    id : number
+    senhaAtual: string;
+    senhaNova: string;
+    confirmarSenha: string;
+}
+
 type LoginRequest = {
     email: string;
     senha: string;
@@ -212,6 +219,27 @@ export class UsuarioServico {
         } catch (error) {
             throw error;
         }
+    }
+
+    async alterarSenha({ id,  senhaAtual, senhaNova, confirmarSenha } : AlterarSenhaRequest ) {
+        const usuario = await this.repositorio.findOne({ where: { id: id } });
+
+        if (!usuario) {
+            return new Error("O usuário não existe!");
+        }
+
+        try {
+            await ValidarFormulario.senha(usuario, senhaAtual, senhaNova, confirmarSenha);
+
+            usuario.senha = senhaNova;
+
+            await this.repositorio.save(usuario);
+            
+            return "Senha alterada com sucesso"
+        } catch (erro) {
+            return erro;
+        }
+
     }
 
     async apagar(id: number) {
