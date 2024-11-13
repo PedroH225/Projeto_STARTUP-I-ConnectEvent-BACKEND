@@ -17,10 +17,11 @@ export class UsuarioControlador {
     }
 
     async visualizar(req: Request, res: Response) {
-        const { id } = req.params;
+        const id = req.user.id;
         const idInt = parseInt(id);
+
         const usuario = await this.service.visualizar(idInt);
-        res.json(usuario);
+        res.status(200).json(usuario);
     }
 
     async visualizarEventosParticipando(req: Request, res: Response) {
@@ -123,10 +124,10 @@ export class UsuarioControlador {
     }
 
     async editar(req: Request, res: Response) {
-        const { id } = req.params;
+        const idInt = parseInt(req.user.id);
+
         const { email, senha, nome, idade, genero, estado, cidade } = req.body;
         const idadeInt = parseInt(idade);
-        const idInt = parseInt(id);
 
         try {
             const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade });
@@ -151,6 +152,21 @@ export class UsuarioControlador {
             res.json({ token });
         } catch (erro: Error | any) {
             res.status(400).json(erro.message);
+        }
+    }
+
+    async alterarSenha(req: Request, res: Response) {
+        const id = req.user.id;
+        const idInt = parseInt(id);        
+        
+        const { senhaAtual, senhaNova, confirmarSenha } = req.body        
+
+        try {
+        const result = await this.service.alterarSenha({ id: idInt, senhaAtual, senhaNova, confirmarSenha })
+            
+        res.status(200).json(result);
+        } catch (erro) {
+            res.status(400).json(erro);
         }
     }
 
