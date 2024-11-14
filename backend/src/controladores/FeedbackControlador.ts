@@ -33,7 +33,7 @@ export class FeedbackControlador {
     }
 
     async eventosSemFeedback(req: Request, res: Response) {
-        const usuarioId = parseInt(req.params.id)
+        const usuarioId = parseInt(req.user.id)
 
         const semFeedback : number[] = await this.servico.eventosSemFeedback(usuarioId);
 

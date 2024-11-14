@@ -95,7 +95,7 @@ routes.get('/grafico/pizza-genero/:id', verificarToken, graficoControlador.grafi
 routes.get('/grafico/histograma-idade/:id', verificarToken, graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
 routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador.graficoLinha.bind(graficoControlador));
 
-routes.get("/semFeedback/:id", feedbackControlador.eventosSemFeedback.bind(feedbackControlador))
+routes.get("/semFeedback", verificarToken, feedbackControlador.eventosSemFeedback.bind(feedbackControlador))
 routes.get("/feedbacks", feedbackControlador.visualizarTodos.bind(feedbackControlador))
 routes.post("/feedback/:usuarioId/:eventoId", feedbackControlador.adicionarFeedback.bind(feedbackControlador))
 export { routes };
