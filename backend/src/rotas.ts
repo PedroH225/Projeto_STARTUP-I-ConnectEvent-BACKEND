@@ -97,5 +97,5 @@ routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador
 
 routes.get("/semFeedback", verificarToken, feedbackControlador.eventosSemFeedback.bind(feedbackControlador))
 routes.get("/feedbacks", feedbackControlador.visualizarTodos.bind(feedbackControlador))
-routes.post("/feedback/:usuarioId/:eventoId", feedbackControlador.adicionarFeedback.bind(feedbackControlador))
+routes.post("/feedback/:eventoId", verificarToken, feedbackControlador.adicionarFeedback.bind(feedbackControlador))
 export { routes };

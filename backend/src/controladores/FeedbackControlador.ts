@@ -16,7 +16,7 @@ export class FeedbackControlador {
     } 
 
     async adicionarFeedback(req: Request, res: Response) {
-        const  usuarioId  =  parseInt(req.params.usuarioId)
+        const  usuarioId  =  parseInt(req.user.id)
         const  eventoId  =  parseInt(req.params.eventoId)
 
         const { comentario, nota } = req.body
