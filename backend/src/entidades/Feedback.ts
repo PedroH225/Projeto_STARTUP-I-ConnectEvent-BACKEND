@@ -25,4 +25,27 @@ export class Feedback {
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     data!: Date;
+
+    constructor(usuario: Usuario, evento: Evento, comentario: string, nota: number) {
+        this.usuario = usuario;
+        this.evento = evento;
+        this.comentario = comentario;
+        this.nota = nota;
+    }
+
+    toJson() {
+        return {
+            id: this.id,
+            comentario: this.comentario,
+            nota: this.nota,
+            data: this.data,
+            usuario: {
+                id: this.usuario.id,
+                nome: this.usuario.nome
+            },
+            evento: {
+                id: this.evento.id
+            }
+        };
+    }
 }
