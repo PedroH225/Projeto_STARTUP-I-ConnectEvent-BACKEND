@@ -8,6 +8,7 @@ import uploadLocal from './utils/uploadLocal';
 import { FotoControlador } from './controladores/FotoControlador';
 import { AmizadeControlodor } from './controladores/AmizadeControlador';
 import { GraficoControlador } from './controladores/GraficoControlador';
+import { FeedbackControlador } from './controladores/FeedbackControlador';
 
 const routes = Router();
 
@@ -18,6 +19,7 @@ const tipoControlador = new TipoControlador();
 const fotoControlador = new FotoControlador();
 const amizadeControlador = new AmizadeControlodor();
 const graficoControlador = new GraficoControlador();
+const feedbackControlador = new FeedbackControlador();
 
 
 // Endereço
@@ -93,5 +95,6 @@ routes.get('/grafico/pizza-genero/:id', verificarToken, graficoControlador.grafi
 routes.get('/grafico/histograma-idade/:id', verificarToken, graficoControlador.graficoHistogramaIdade.bind(graficoControlador));
 routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador.graficoLinha.bind(graficoControlador));
 
-
+routes.get("/feedbacks", feedbackControlador.visualizarTodos.bind(feedbackControlador))
+routes.post("/feedback/:usuarioId/:eventoId", feedbackControlador.adicionarFeedback.bind(feedbackControlador))
 export { routes };
