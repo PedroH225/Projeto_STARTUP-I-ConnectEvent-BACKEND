@@ -4,6 +4,7 @@ import { Evento } from "../entidades/Evento";
 import { Feedback } from "../entidades/Feedback";
 import { Usuario } from "../entidades/Usuario";
 import { UsuarioServico } from "./UsuarioServico";
+import { format } from 'date-fns';
 
 type AdicionarFeedbackRequest = {
     usuarioId : number,
@@ -78,6 +79,10 @@ export class FeedbackServico {
 
         try {
         const feedbacks = await this.repositorio.find({ where : { evento : { id : eventoId}}})
+        
+        feedbacks.forEach((feedback: any) => {
+            feedback.data = format(new Date(feedback.data), 'dd/MM/yyyy, HH:mm');
+        });
 
         return feedbacks;
         } catch (error) {
