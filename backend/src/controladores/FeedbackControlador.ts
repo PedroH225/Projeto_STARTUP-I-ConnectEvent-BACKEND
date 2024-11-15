@@ -52,4 +52,17 @@ export class FeedbackControlador {
             res.status(400).json(error)
         }
     }
+
+    async visualizarFeedbacksUsuario(req: Request, res: Response) {
+        const usuarioId = parseInt(req.user.id)
+        
+        try {
+        const feedbacks = await this.servico.visualizarFeedbacksUsuario(usuarioId)
+
+        res.status(200).json(feedbacks)
+
+        } catch (error) {            
+            res.status(400).json(error)
+        }
+    }
 }

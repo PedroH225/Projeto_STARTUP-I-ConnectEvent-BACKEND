@@ -44,7 +44,8 @@ export class Feedback {
                 nome: this.usuario.nome
             },
             evento: {
-                id: this.evento.id
+                id: this.evento.id,
+                titulo: this.evento.titulo
             }
         };
     }
