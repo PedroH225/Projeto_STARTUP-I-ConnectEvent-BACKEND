@@ -7,10 +7,16 @@ import { UsuarioServico } from "./UsuarioServico";
 import { format } from 'date-fns';
 
 type AdicionarFeedbackRequest = {
-    usuarioId : number,
-    eventoId : number,
-    comentario : string,
-    nota : number
+    usuarioId: number,
+    eventoId: number,
+    comentario: string,
+    nota: number
+}
+
+type EditarFeedbackRequest = {
+    feedbackId: number,
+    comentario: string,
+    nota: number
 }
 
 export class FeedbackServico {
@@ -29,17 +35,17 @@ export class FeedbackServico {
     async visualizarTodos() {
         const feedbacks = await this.repositorio.find();
 
-        return feedbacks.map(feedback => feedback.toJson());    
+        return feedbacks.map(feedback => feedback.toJson());
     }
 
-    async adicionarFeedback({ usuarioId, eventoId, comentario, nota} : AdicionarFeedbackRequest) {
-        const usuario = await this.usuarioRepositorio.findOne({ where : { id : usuarioId }})
+    async adicionarFeedback({ usuarioId, eventoId, comentario, nota }: AdicionarFeedbackRequest) {
+        const usuario = await this.usuarioRepositorio.findOne({ where: { id: usuarioId } })
 
         if (!usuario) {
             throw new Error("Usuário não encontrado")
         }
 
-        const evento = await this.eventoRepositorio.findOne({ where : { id : eventoId }})
+        const evento = await this.eventoRepositorio.findOne({ where: { id: eventoId } })
 
         if (!evento) {
             throw new Error("Evento não encontrado")
@@ -48,7 +54,7 @@ export class FeedbackServico {
         const feedback = new Feedback(usuario, evento, comentario, nota);
         try {
             await this.repositorio.save(feedback)
-            
+
             return "Feedback publicado com sucesso!"
 
         } catch (error) {
@@ -57,17 +63,17 @@ export class FeedbackServico {
 
     }
 
-    async eventosSemFeedback(usuarioId : number) {
+    async eventosSemFeedback(usuarioId: number) {
         const ocorridos = await this.usuarioServico.visualizarEventosParticipandoOcorridosSemFormat(usuarioId);
-        const ids : number[] = [];
+        const ids: number[] = [];
 
         ocorridos.forEach(evento => {
             ids.push(evento.id);
         });
 
-        const feedbacks = await this.repositorio.find({ where : { usuario : { id : usuarioId }, evento : { id : In(ids)}}})
+        const feedbacks = await this.repositorio.find({ where: { usuario: { id: usuarioId }, evento: { id: In(ids) } } })
 
-        
+
         const feedbackedEventIds = feedbacks.map(feedback => feedback.evento.id);
 
         const eventosSemFeedback = ocorridos.filter(evento => !feedbackedEventIds.includes(evento.id));
@@ -75,16 +81,16 @@ export class FeedbackServico {
         return eventosSemFeedback.map(evento => evento.id);
     }
 
-    async visualizarFeedbacksEvento(eventoId : number) {
+    async visualizarFeedbacksEvento(eventoId: number) {
 
         try {
-        const feedbacks = await this.repositorio.find({ where : { evento : { id : eventoId}}})
-        
-        feedbacks.forEach((feedback: any) => {
-            feedback.data = format(new Date(feedback.data), 'dd/MM/yyyy, HH:mm');
-        });
+            const feedbacks = await this.repositorio.find({ where: { evento: { id: eventoId } } })
 
-        return feedbacks;
+            feedbacks.forEach((feedback: any) => {
+                feedback.data = format(new Date(feedback.data), 'dd/MM/yyyy, HH:mm');
+            });
+
+            return feedbacks;
         } catch (error) {
             throw error;
         }
@@ -93,15 +99,35 @@ export class FeedbackServico {
     async visualizarFeedbacksUsuario(usuarioId: number) {
 
         try {
-        const feedbacks = await this.repositorio.find({ where : { usuario : { id : usuarioId}}})
-        
-        feedbacks.forEach((feedback: any) => {
-            feedback.data = format(new Date(feedback.data), 'dd/MM/yyyy, HH:mm');
-        });
+            const feedbacks = await this.repositorio.find({ where: { usuario: { id: usuarioId } } })
 
-        return feedbacks;
+            feedbacks.forEach((feedback: any) => {
+                feedback.data = format(new Date(feedback.data), 'dd/MM/yyyy, HH:mm');
+            });
+
+            return feedbacks;
         } catch (error) {
             throw error;
         }
+    }
+
+    async editarFeedback({ feedbackId, comentario, nota }: EditarFeedbackRequest) {
+        const feedback = await this.repositorio.findOne({ where : { id : feedbackId }});
+
+        if (!feedback) {
+            throw new Error("Feedback não encontrado.")
+        }
+
+        feedback.comentario = comentario;
+        feedback.nota = nota;
+
+        try {
+            await this.repositorio.save(feedback);
+
+            return "Feedback editado com sucesso."
+        } catch (error) {
+            throw "Erro ao editar o feedback."
+        }
+
     }
 }

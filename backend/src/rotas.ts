@@ -101,4 +101,5 @@ routes.get("/feedback/usuario", verificarToken, feedbackControlador.visualizarFe
 routes.get("/semFeedback", verificarToken, feedbackControlador.eventosSemFeedback.bind(feedbackControlador))
 routes.get("/feedbacks", feedbackControlador.visualizarTodos.bind(feedbackControlador))
 routes.post("/feedback/:eventoId", verificarToken, feedbackControlador.adicionarFeedback.bind(feedbackControlador))
+routes.put("/feedback/:feedbackId", feedbackControlador.editarFeedback.bind(feedbackControlador))
 export { routes };
