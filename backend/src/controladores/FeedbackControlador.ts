@@ -15,6 +15,18 @@ export class FeedbackControlador {
         res.status(200).json(feedbacks)
     }
 
+    async visualizarPorId(req: Request, res: Response) {
+        const feedbackId = parseInt(req.params.feedbackId)
+
+        try {
+        const feedback = await this.servico.visualizarPorId(feedbackId);
+
+        res.status(200).json(feedback)
+        } catch (error) {
+            res.status(400).json(error);
+        }
+    }
+
     async adicionarFeedback(req: Request, res: Response) {
         const usuarioId = parseInt(req.user.id)
         const eventoId = parseInt(req.params.eventoId)

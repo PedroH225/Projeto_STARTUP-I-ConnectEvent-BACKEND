@@ -38,6 +38,16 @@ export class FeedbackServico {
         return feedbacks.map(feedback => feedback.toJson());
     }
 
+    async visualizarPorId(feedbackId: number) {
+        try {
+        const feedback = await this.repositorio.findOne({ where: { id: feedbackId } })
+
+        return feedback?.toJson();
+        } catch (error) {
+            return error;
+        }
+    }
+
     async adicionarFeedback({ usuarioId, eventoId, comentario, nota }: AdicionarFeedbackRequest) {
         const usuario = await this.usuarioRepositorio.findOne({ where: { id: usuarioId } })
 
@@ -112,7 +122,7 @@ export class FeedbackServico {
     }
 
     async editarFeedback({ feedbackId, comentario, nota }: EditarFeedbackRequest) {
-        const feedback = await this.repositorio.findOne({ where : { id : feedbackId }});
+        const feedback = await this.repositorio.findOne({ where: { id: feedbackId } });
 
         if (!feedback) {
             throw new Error("Feedback não encontrado.")
