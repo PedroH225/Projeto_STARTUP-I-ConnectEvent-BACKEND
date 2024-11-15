@@ -89,4 +89,19 @@ export class FeedbackServico {
             throw error;
         }
     }
+
+    async visualizarFeedbacksUsuario(usuarioId: number) {
+
+        try {
+        const feedbacks = await this.repositorio.find({ where : { usuario : { id : usuarioId}}})
+        
+        feedbacks.forEach((feedback: any) => {
+            feedback.data = format(new Date(feedback.data), 'dd/MM/yyyy, HH:mm');
+        });
+
+        return feedbacks;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
