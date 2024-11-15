@@ -140,4 +140,14 @@ export class FeedbackServico {
         }
 
     }
+
+    async excluir(feedbackId : number) {
+        try {
+            await this.repositorio.delete(feedbackId);
+
+            return "Feedback Excluído com sucesso."
+        } catch (error) {
+            throw error;
+        }
+    }
 }

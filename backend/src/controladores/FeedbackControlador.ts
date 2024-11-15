@@ -92,4 +92,17 @@ export class FeedbackControlador {
             res.status(400).json(error)
         }
     }
+
+    async excluir(req: Request, res: Response) {
+        const feedbackId = parseInt(req.params.feedbackId);
+
+        try {
+            const response = await this.servico.excluir(feedbackId);
+
+            res.status(200).json(response)
+            
+        } catch (error) {
+            res.status(400).json(error)
+        }
+    }
 }

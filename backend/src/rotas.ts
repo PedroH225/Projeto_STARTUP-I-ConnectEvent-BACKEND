@@ -98,9 +98,10 @@ routes.get('/grafico/linha-participados/:id', verificarToken, graficoControlador
 // Feedback
 routes.get("/feedback/evento/:eventoId", verificarToken, feedbackControlador.visualizarFeedbacksEvento.bind(feedbackControlador))
 routes.get("/feedback/usuario", verificarToken, feedbackControlador.visualizarFeedbacksUsuario.bind(feedbackControlador))
-routes.get("/feedback/:feedbackId", feedbackControlador.visualizarPorId.bind(feedbackControlador))
+routes.get("/feedback/:feedbackId", verificarToken, feedbackControlador.visualizarPorId.bind(feedbackControlador))
 routes.get("/semFeedback", verificarToken, feedbackControlador.eventosSemFeedback.bind(feedbackControlador))
 routes.get("/feedbacks", feedbackControlador.visualizarTodos.bind(feedbackControlador))
 routes.post("/feedback/:eventoId", verificarToken, feedbackControlador.adicionarFeedback.bind(feedbackControlador))
 routes.put("/feedback/:feedbackId", verificarToken, feedbackControlador.editarFeedback.bind(feedbackControlador))
+routes.delete("/feedback/:feedbackId", verificarToken, feedbackControlador.excluir.bind(feedbackControlador))
 export { routes };
