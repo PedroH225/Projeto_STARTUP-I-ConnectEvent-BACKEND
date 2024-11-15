@@ -144,8 +144,16 @@ export class UsuarioServico {
             horario: Formatador.formatarHorario(evento.horario)
         }));
         return eventosFormatados;
-    
-}
+    }
+
+    async visualizarEventosParticipandoOcorridosSemFormat(usuarioId: number) {
+        const eventos = await this.eventoRepositorio.find({ where: { data: LessThanOrEqual(new Date()), participantes: { id: usuarioId }}});
+        if (eventos.length === 0) {
+            return [];
+        }
+
+        return eventos;
+    }
 
     async criar({ email, senha, nome, idade, genero, estado, cidade }: UsuarioRequest) {
         

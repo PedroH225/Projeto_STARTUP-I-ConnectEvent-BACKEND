@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, Ma
 import { Endereco } from "./Endereco";
 import { Foto } from "./Foto";
 import { Usuario } from "./Usuario";
+import { Feedback } from "./Feedback";
 
 @Entity("evento")
 export class Evento {
@@ -49,6 +50,9 @@ export class Evento {
 
      @ManyToMany(() => Usuario, usuario => usuario.eventos)
     participantes!: Usuario[];
+
+    @OneToMany(() => Feedback, feedback => feedback.evento)
+    feedbacks!: Feedback[];
 
     constructor(
         titulo: string, descricao: string, data: Date,
