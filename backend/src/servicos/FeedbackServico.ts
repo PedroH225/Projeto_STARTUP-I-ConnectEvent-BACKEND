@@ -73,4 +73,15 @@ export class FeedbackServico {
 
         return eventosSemFeedback.map(evento => evento.id);
     }
+
+    async visualizarFeedbacksEvento(eventoId : number) {
+
+        try {
+        const feedbacks = await this.repositorio.find({ where : { evento : { id : eventoId}}})
+
+        return feedbacks;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

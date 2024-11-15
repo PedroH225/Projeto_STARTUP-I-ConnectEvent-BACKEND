@@ -39,4 +39,17 @@ export class FeedbackControlador {
 
         res.status(200).json(semFeedback)
     }
+
+    async visualizarFeedbacksEvento(req: Request, res: Response) {
+        const eventoId = parseInt(req.params.eventoId)
+
+        try {
+        const feedbacks = await this.servico.visualizarFeedbacksEvento(eventoId)
+
+        res.status(200).json(feedbacks)
+
+        } catch (error) {
+            res.status(400).json(error)
+        }
+    }
 }
