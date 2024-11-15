@@ -13,19 +13,31 @@ export class FeedbackControlador {
         const feedbacks = await this.servico.visualizarTodos()
 
         res.status(200).json(feedbacks)
-    } 
+    }
+
+    async visualizarPorId(req: Request, res: Response) {
+        const feedbackId = parseInt(req.params.feedbackId)
+
+        try {
+        const feedback = await this.servico.visualizarPorId(feedbackId);
+
+        res.status(200).json(feedback)
+        } catch (error) {
+            res.status(400).json(error);
+        }
+    }
 
     async adicionarFeedback(req: Request, res: Response) {
-        const  usuarioId  =  parseInt(req.user.id)
-        const  eventoId  =  parseInt(req.params.eventoId)
+        const usuarioId = parseInt(req.user.id)
+        const eventoId = parseInt(req.params.eventoId)
 
         const { comentario, nota } = req.body
         const notaInt = parseInt(nota);
 
         try {
-        const result = await this.servico.adicionarFeedback({ usuarioId, eventoId, comentario, nota: notaInt })
+            const result = await this.servico.adicionarFeedback({ usuarioId, eventoId, comentario, nota: notaInt })
 
-        res.status(200).json(result);
+            res.status(200).json(result);
         } catch (error) {
             res.status(400).json(error)
         }
@@ -35,7 +47,7 @@ export class FeedbackControlador {
     async eventosSemFeedback(req: Request, res: Response) {
         const usuarioId = parseInt(req.user.id)
 
-        const semFeedback : number[] = await this.servico.eventosSemFeedback(usuarioId);
+        const semFeedback: number[] = await this.servico.eventosSemFeedback(usuarioId);
 
         res.status(200).json(semFeedback)
     }
@@ -44,9 +56,9 @@ export class FeedbackControlador {
         const eventoId = parseInt(req.params.eventoId)
 
         try {
-        const feedbacks = await this.servico.visualizarFeedbacksEvento(eventoId)
+            const feedbacks = await this.servico.visualizarFeedbacksEvento(eventoId)
 
-        res.status(200).json(feedbacks)
+            res.status(200).json(feedbacks)
 
         } catch (error) {
             res.status(400).json(error)
@@ -55,13 +67,41 @@ export class FeedbackControlador {
 
     async visualizarFeedbacksUsuario(req: Request, res: Response) {
         const usuarioId = parseInt(req.user.id)
-        
+
         try {
-        const feedbacks = await this.servico.visualizarFeedbacksUsuario(usuarioId)
+            const feedbacks = await this.servico.visualizarFeedbacksUsuario(usuarioId)
 
-        res.status(200).json(feedbacks)
+            res.status(200).json(feedbacks)
 
-        } catch (error) {            
+        } catch (error) {
+            res.status(400).json(error)
+        }
+    }
+
+    async editarFeedback(req: Request, res: Response) {
+        const feedbackId = parseInt(req.params.feedbackId)
+
+        const { comentario, nota } = req.body
+
+        try {
+            const feedbacks = await this.servico.editarFeedback({ feedbackId, comentario, nota })
+
+            res.status(200).json(feedbacks)
+
+        } catch (error) {
+            res.status(400).json(error)
+        }
+    }
+
+    async excluir(req: Request, res: Response) {
+        const feedbackId = parseInt(req.params.feedbackId);
+
+        try {
+            const response = await this.servico.excluir(feedbackId);
+
+            res.status(200).json(response)
+            
+        } catch (error) {
             res.status(400).json(error)
         }
     }
