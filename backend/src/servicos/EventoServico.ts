@@ -49,7 +49,7 @@ export class EventoServico {
     }
 
     async visualizarPorId(id: number) {
-        const evento = await this.repositorio.findOne({ where: { id : id }, relations: ["participantes"] })
+        const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["participantes"] })
 
         return evento;
     }
@@ -302,4 +302,14 @@ export class EventoServico {
 
         return "Evento deletado com sucesso.";
     }
+
+    async randomEventos(id: number) {
+        const eventos = await this.visualizarAnunciados(id);
+
+        //  Randomiza a ordem dos eventos
+        const eventosRandomizados = eventos.sort(() => Math.random() - 0.5);
+
+        return eventos;
+    }
 }
+
