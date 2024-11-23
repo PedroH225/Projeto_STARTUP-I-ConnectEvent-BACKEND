@@ -118,4 +118,11 @@ export class EventoControlador {
 
         res.status(200).json(eventosRandomizados);
     }
+
+    async destaqueEventos(req: Request, res: Response) {
+        
+        const eventosDestaque = await this.service.eventoDestaque();
+
+        res.status(200).json(eventosDestaque);
+    }
 }

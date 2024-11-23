@@ -9,6 +9,7 @@ import { Usuario } from "../entidades/Usuario"; // Importando a nova entidade
 import { FotoServico } from "./FotoServico";
 import { UsuarioServico } from "./UsuarioServico";
 import { AmizadeServico } from "./AmizadeServico";
+import { Destaque } from "../entidades/Destaque";
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string,
@@ -27,6 +28,7 @@ export class EventoServico {
     private endRepositorio;
     private usuarioServico;
     private amizadeServico;
+    private destaqueRepositorio;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Evento);
@@ -34,6 +36,7 @@ export class EventoServico {
         this.endRepositorio = AppDataSource.getRepository(Endereco);
         this.usuarioServico = new UsuarioServico;
         this.amizadeServico = new AmizadeServico;
+        this.destaqueRepositorio = AppDataSource.getRepository(Destaque)
     }
 
     async visualizarTodos() {
@@ -310,6 +313,18 @@ export class EventoServico {
         const eventosRandomizados = eventos.sort(() => Math.random() - 0.5);
 
         return eventos;
+    }
+
+    async eventoDestaque() {
+        const destaques = await this.destaqueRepositorio.find();
+        const ids : Number[] = [];
+        destaques.forEach(destaque => {
+            ids.push(destaque.eventoId);
+        })
+
+        const eventosDestaque = this.repositorio.find( { where : { id : In(ids) }, relations: ["endereco", "fotos", "participantes"] })
+
+        return eventosDestaque;
     }
 }
 
