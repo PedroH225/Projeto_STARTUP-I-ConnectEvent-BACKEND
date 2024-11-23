@@ -120,9 +120,10 @@ export class EventoControlador {
     }
 
     async destaqueEventos(req: Request, res: Response) {
+        const id = parseInt(req.user?.id)
         
-        const eventosDestaque = await this.service.eventoDestaque();
+        const eventosDestaque = await this.service.eventoDestaque(id);
 
-        res.status(200).json(eventosDestaque);
+        res.status(200).json(eventosDestaque)
     }
 }

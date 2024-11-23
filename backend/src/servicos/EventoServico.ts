@@ -312,17 +312,43 @@ export class EventoServico {
         //  Randomiza a ordem dos eventos
         const eventosRandomizados = eventos.sort(() => Math.random() - 0.5);
 
-        return eventos;
+        return eventosRandomizados;
     }
 
-    async eventoDestaque() {
+    async eventoDestaque(id : number) {
+        let usuario;
+        let amigos;
+
         const destaques = await this.destaqueRepositorio.find();
         const ids : Number[] = [];
         destaques.forEach(destaque => {
             ids.push(destaque.eventoId);
         })
 
-        const eventosDestaque = this.repositorio.find( { where : { id : In(ids) }, relations: ["endereco", "fotos", "participantes"] })
+        if (id) {
+            usuario = await this.usuarioServico.visualizar(id);
+            if (usuario) {
+                amigos = await this.amizadeServico.listarAceitos(id)
+
+            }
+        }
+
+        const eventosDestaque = await this.repositorio.find( { where : { id : In(ids) }, relations: ["endereco", "fotos", "participantes"] })
+
+        if (amigos && amigos.length > 0) {
+            const amigoIds = amigos.map(amigo => amigo.id);
+
+            // Filtrar os participantes de cada evento
+            eventosDestaque.forEach(evento => {
+                evento.participantes = evento.participantes.filter(participante =>
+                    amigoIds.includes(participante.id)
+                );
+            });
+        } else {
+            eventosDestaque.forEach(evento => {
+                evento.participantes = []
+            })
+        }
 
         return eventosDestaque;
     }
