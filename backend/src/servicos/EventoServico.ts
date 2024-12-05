@@ -9,6 +9,7 @@ import { Usuario } from "../entidades/Usuario"; // Importando a nova entidade
 import { FotoServico } from "./FotoServico";
 import { UsuarioServico } from "./UsuarioServico";
 import { AmizadeServico } from "./AmizadeServico";
+import { Destaque } from "../entidades/Destaque";
 
 type EventoRequest = {
     titulo: string, descricao: string, data: Date, horario: string, tipo: string, telefone: string,
@@ -27,6 +28,7 @@ export class EventoServico {
     private endRepositorio;
     private usuarioServico;
     private amizadeServico;
+    private destaqueRepositorio;
 
     constructor() {
         this.repositorio = AppDataSource.getRepository(Evento);
@@ -34,6 +36,7 @@ export class EventoServico {
         this.endRepositorio = AppDataSource.getRepository(Endereco);
         this.usuarioServico = new UsuarioServico;
         this.amizadeServico = new AmizadeServico;
+        this.destaqueRepositorio = AppDataSource.getRepository(Destaque)
     }
 
     async visualizarTodos() {
@@ -49,7 +52,7 @@ export class EventoServico {
     }
 
     async visualizarPorId(id: number) {
-        const evento = await this.repositorio.findOne({ where: { id : id }, relations: ["participantes"] })
+        const evento = await this.repositorio.findOne({ where: { id: id }, relations: ["participantes"] })
 
         return evento;
     }
@@ -302,4 +305,52 @@ export class EventoServico {
 
         return "Evento deletado com sucesso.";
     }
+
+    async randomEventos(id: number) {
+        const eventos = await this.visualizarAnunciados(id);
+
+        //  Randomiza a ordem dos eventos
+        const eventosRandomizados = eventos.sort(() => Math.random() - 0.5);
+
+        return eventosRandomizados;
+    }
+
+    async eventoDestaque(id : number) {
+        let usuario;
+        let amigos;
+
+        const destaques = await this.destaqueRepositorio.find();
+        const ids : Number[] = [];
+        destaques.forEach(destaque => {
+            ids.push(destaque.eventoId);
+        })
+
+        if (id) {
+            usuario = await this.usuarioServico.visualizar(id);
+            if (usuario) {
+                amigos = await this.amizadeServico.listarAceitos(id)
+
+            }
+        }
+
+        const eventosDestaque = await this.repositorio.find( { where : { id : In(ids) }, relations: ["endereco", "fotos", "participantes"] })
+
+        if (amigos && amigos.length > 0) {
+            const amigoIds = amigos.map(amigo => amigo.id);
+
+            // Filtrar os participantes de cada evento
+            eventosDestaque.forEach(evento => {
+                evento.participantes = evento.participantes.filter(participante =>
+                    amigoIds.includes(participante.id)
+                );
+            });
+        } else {
+            eventosDestaque.forEach(evento => {
+                evento.participantes = []
+            })
+        }
+
+        return eventosDestaque;
+    }
 }
+

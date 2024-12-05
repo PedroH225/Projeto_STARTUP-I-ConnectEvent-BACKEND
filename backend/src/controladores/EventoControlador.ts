@@ -110,4 +110,20 @@ export class EventoControlador {
         const resultado = await this.service.apagar(parseInt(id));
         res.json(resultado);
     }
+
+    async randomEventos(req: Request, res: Response) {
+        const idInt = parseInt(req.user?.id)
+        
+        const eventosRandomizados = await this.service.randomEventos(idInt);
+
+        res.status(200).json(eventosRandomizados);
+    }
+
+    async destaqueEventos(req: Request, res: Response) {
+        const id = parseInt(req.user?.id)
+        
+        const eventosDestaque = await this.service.eventoDestaque(id);
+
+        res.status(200).json(eventosDestaque)
+    }
 }
