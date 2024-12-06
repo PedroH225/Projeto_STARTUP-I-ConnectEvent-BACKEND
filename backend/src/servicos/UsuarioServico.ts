@@ -254,7 +254,7 @@ export class UsuarioServico {
         try {
             await ValidarFormulario.senha(usuario, senhaAtual, senhaNova, confirmarSenha);
 
-            usuario.senha = senhaNova;
+            usuario.senha = await bcrypt.hash(senhaNova, this.saltRounds);
 
             await this.repositorio.save(usuario);
 

@@ -3,6 +3,7 @@ import { AppDataSource } from "../bd";
 import { FormErro } from "../entidades/FormErro";
 import { Usuario } from "../entidades/Usuario";
 import { Evento } from "../entidades/Evento";
+import bcrypt from 'bcrypt';
 
 export class ValidarFormulario {
     static async usuario(usuario: Usuario) {
@@ -106,7 +107,7 @@ export class ValidarFormulario {
             throw erros;
         }
     }
-    
+
     static async evento(evento: Evento) {
         const erros: FormErro[] = [];
 
@@ -160,30 +161,37 @@ export class ValidarFormulario {
     }
 
     static async senha(usuario: Usuario, senhaAtual: string, senhaNova: string, confirmarSenha: string) {
-        const erros: FormErro[] = [];
-    
-        if (senhaAtual.trim() === "") {
-            erros.push(new FormErro("atualErro", "Campo obrigatório."));
-        } else if (senhaAtual !== usuario.senha) {
-            erros.push(new FormErro("atualErro", "Senha inválida."));
-        }
-    
-        const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (senhaNova.trim() === "") {
-            erros.push(new FormErro("novaErro", "Campo obrigatório."));
-        } else if(!senhaRegex.test(senhaNova)) {
-            erros.push(new FormErro("novaErro", "A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial."));
-        }
-    
-        if (confirmarSenha.trim() === "") {
-            erros.push(new FormErro("confirmarErro", "Campo obrigatório."));
-        } else if (senhaNova !== confirmarSenha) {
-            erros.push(new FormErro("confirmarErro", "Senhas não coincidem."));
-        }
-    
-        if (erros.length > 0) {
-            throw erros;
-        }
+    const erros: FormErro[] = [];
+
+    // Verificar se o campo senha atual está preenchido
+    if (senhaAtual.trim() === "") {
+        erros.push(new FormErro("atualErro", "Campo obrigatório."));
+    } else if (!(await bcrypt.compare(senhaAtual, usuario.senha))) {
+        erros.push(new FormErro("atualErro", "Senha inválida."));
     }
+
+    // Verificar se a nova senha atende aos requisitos
+    const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (senhaNova.trim() === "") {
+        erros.push(new FormErro("novaErro", "Campo obrigatório."));
+    } else if (!senhaRegex.test(senhaNova)) {
+        erros.push(new FormErro("novaErro", "A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial."));
+    }
+
+    // Verificar se a confirmação de senha coincide
+    if (confirmarSenha.trim() === "") {
+        erros.push(new FormErro("confirmarErro", "Campo obrigatório."));
+    } else if (senhaNova !== confirmarSenha) {
+        erros.push(new FormErro("confirmarErro", "Senhas não coincidem."));
+    }
+
+    // Lançar erros, se houver
+    if (erros.length > 0) {
+        throw erros;
+    }
+
+    // Criptografar a nova senha antes de salvá-la
+    const saltRounds = 10; // Pode ajustar conforme necessário
+}
     
 }
