@@ -5,6 +5,7 @@ import { ValidarFormulario } from "../utils/ValidarFormulario";
 import jwt from 'jsonwebtoken';
 import { LessThan, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { Formatador } from "../utils/FormatadorDeData";
+import { CodigoErro, criarErro } from "../utils/CriarErro";
 
 type UsuarioRequest = {
     email: string;
@@ -111,9 +112,14 @@ export class UsuarioServico {
     async visualizarPorEmail(email: string) {
         try {
             const usuario = await this.repositorio.findOne({ where: { email: email } });
-            return usuario || null;
-        } catch {
-            return null;
+
+            if (!usuario) {
+                throw criarErro("Usuário não encontrado.", 400, CodigoErro.USUARIO_NAO_ENCONTRADO, "amizadeErro")
+            }
+
+            return usuario;
+        } catch (erro) {
+            throw erro;
         }
     }
 
