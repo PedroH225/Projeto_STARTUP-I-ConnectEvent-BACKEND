@@ -45,9 +45,10 @@ export class ValidarFormulario {
             erros.push(new FormErro("emailErro", "Endereço de email já cadastrado."));
         }
 
-        const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!senhaRegex.test(usuario.senha)) {
             erros.push(new FormErro("senhaErro", "A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial."));
+
         }
 
         if (usuario.idade <= 0) {
@@ -60,6 +61,52 @@ export class ValidarFormulario {
         }
     }
 
+    static async usuarioEdit(usuario: Usuario) {
+        const repository = AppDataSource.getRepository(Usuario);
+        const erros: FormErro[] = [];
+
+        // Verificação se o usuário já existe
+        const whereCondition = usuario.id ? 
+            { email: usuario.email, id: Not(usuario.id) } : 
+            { email: usuario.email };
+        
+        const emailExistente = await repository.findOne({ where: whereCondition });
+
+        if (usuario.nome.trim() === "") {
+            erros.push(new FormErro("nomeErro", "Campo obrigatório."));
+        }
+
+        if (usuario.email.trim() === "") {
+            erros.push(new FormErro("emailErro", "Campo obrigatório."));
+        }
+
+        if (usuario.idade == null) {
+            erros.push(new FormErro("idadeErro", "Campo obrigatório."));
+        }
+
+        if (erros.length > 0) {
+            throw erros;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(usuario.email)) {
+            erros.push(new FormErro("emailErro", "Endereço de email inválido. Utilize o formato: 'exemplo@gmail.com'.")); 
+        }
+
+        if (emailExistente) {
+            erros.push(new FormErro("emailErro", "Endereço de email já cadastrado."));
+        }
+
+        if (usuario.idade <= 0) {
+            erros.push(new FormErro("idadeErro", "A idade deve ser maior que zero!"));
+
+        }
+
+        if (erros.length > 0) {
+            throw erros;
+        }
+    }
+    
     static async evento(evento: Evento) {
         const erros: FormErro[] = [];
 

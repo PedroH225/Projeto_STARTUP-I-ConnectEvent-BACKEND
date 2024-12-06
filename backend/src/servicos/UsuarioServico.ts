@@ -219,9 +219,12 @@ export class UsuarioServico {
     async editar({ id, email, senha, nome, idade, genero, estado, cidade, wallpaper }: UpdateUsuarioRequest) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
+
         if (!usuario) {
             return new Error("O usuário não existe!");
         }
+
+        try {
 
         usuario.email = email ? email : usuario.email;
         usuario.senha = senha ? senha : usuario.senha;
@@ -232,8 +235,7 @@ export class UsuarioServico {
         usuario.cidade = cidade ? cidade : usuario.cidade;
         usuario.wallpaper = wallpaper ? wallpaper : usuario.wallpaper
 
-        try {
-            await ValidarFormulario.usuario(usuario);
+            await ValidarFormulario.usuarioEdit(usuario);
 
             await this.repositorio.save(usuario);
             return usuario;
