@@ -2,6 +2,7 @@ import { In } from "typeorm";
 import { AppDataSource } from "../bd";
 import { PedidoAmizade } from "../entidades/PedidoAmizade";
 import { Usuario } from "../entidades/Usuario";
+import { CodigoErro, criarErro } from "../utils/CriarErro";
 
 export class AmizadeServico {
 
@@ -23,9 +24,13 @@ export class AmizadeServico {
         });
     
         if (pedidoExistente) {
-            throw ({ tipo:"amizadeErro", mensagem: "Usuário já adicionado."});
+            throw criarErro("Usuário já adicionado.", 400, CodigoErro.USUARIO_JA_ADD, "amizadeErro")
         }
-    
+
+        if (destinatarioId === remetenteId) {
+            throw criarErro("Você não pode se adicionar.", 400, CodigoErro.AUTO_ADICAO, "amizadeErro");
+        }
+
         const pedido = new PedidoAmizade(remetenteId, destinatarioId);
         await this.repository.save(pedido);
     
