@@ -19,6 +19,9 @@ export class Usuario extends Pessoa {
     @Column()
     cidade: string;
 
+    @Column()
+    wallpaper : string;
+
     @ManyToMany(() => Evento, evento => evento.participantes)
     @JoinTable({
         name: "usuario_evento",
@@ -55,7 +58,7 @@ export class Usuario extends Pessoa {
 
     constructor(
         id: number, email: string, senha: string, nome: string, 
-        idade: number, genero: string, estado: string, cidade: string,
+        idade: number, genero: string, estado: string, cidade: string, wallpaper : string,
         eventos: Evento[], eventosCriados: Evento[], notificacoes: Notificacao[]
     ) { 
         super();
@@ -67,6 +70,7 @@ export class Usuario extends Pessoa {
         this.genero = genero;
         this.estado = estado;
         this.cidade = cidade;
+        this.wallpaper = wallpaper;
         this.eventos = eventos;
         this.eventosCriados = eventosCriados;
         this.notificacoes = notificacoes;
@@ -81,7 +85,8 @@ export class Usuario extends Pessoa {
             idade: this.idade,
             genero: this.genero,
             estado: this.estado,
-            cidade: this.cidade
+            cidade: this.cidade,
+            wallpaper: this.wallpaper
         };
     }
 }

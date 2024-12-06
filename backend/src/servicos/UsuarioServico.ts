@@ -26,6 +26,7 @@ type UpdateUsuarioRequest = {
     genero: string;
     estado: string;
     cidade: string;
+    wallpaper : string
 }
 
 type AlterarSenhaRequest = {
@@ -210,7 +211,7 @@ export class UsuarioServico {
     }
     
 
-    async editar({ id, email, senha, nome, idade, genero, estado, cidade }: UpdateUsuarioRequest) {
+    async editar({ id, email, senha, nome, idade, genero, estado, cidade, wallpaper }: UpdateUsuarioRequest) {
         const usuario = await this.repositorio.findOne({ where: { id: id } });
 
         if (!usuario) {
@@ -224,6 +225,7 @@ export class UsuarioServico {
         usuario.genero = genero ? genero : usuario.genero;
         usuario.estado = estado ? estado : usuario.estado;
         usuario.cidade = cidade ? cidade : usuario.cidade;
+        usuario.wallpaper = wallpaper ? wallpaper : usuario.wallpaper
 
         try {
         await ValidarFormulario.usuario(usuario);

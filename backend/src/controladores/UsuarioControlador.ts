@@ -126,11 +126,11 @@ export class UsuarioControlador {
     async editar(req: Request, res: Response) {
         const idInt = parseInt(req.user.id);
 
-        const { email, senha, nome, idade, genero, estado, cidade } = req.body;
+        const { email, senha, nome, idade, genero, estado, cidade, wallpaper } = req.body;
         const idadeInt = parseInt(idade);
 
         try {
-            const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade });
+            const result = await this.service.editar({ id: idInt, email, senha, nome, idade: idadeInt, genero, estado, cidade, wallpaper });
             res.status(200).json(result);
         } catch (erros) {
             res.status(400).json(erros);
@@ -173,7 +173,7 @@ export class UsuarioControlador {
     async validar(req: Request, res: Response) {
         const eventos: Evento[] = [];
         try {
-            await ValidarFormulario.usuario(new Usuario(10, "email@email.com", "Senha3@a", "pedro", 25, "masculino", "estado", "cidade", eventos, [], []));
+            await ValidarFormulario.usuario(new Usuario(10, "email@email.com", "Senha3@a", "pedro", 25, "masculino", "estado", "cidade", '1', eventos, [], []));
             res.json("De boa!");
         } catch (erros) {
             res.json(erros);
