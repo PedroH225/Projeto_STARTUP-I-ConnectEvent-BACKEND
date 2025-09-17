@@ -26,7 +26,7 @@ To run the project backend, you need to have NodeJS, NPM installed and create th
   - Configure the environment variables according to your database. Example::
 
      ```env
-     	DB_HOST=YOUR_HOST
+    DB_HOST=YOUR_HOST
 	DB_PORT=YOUR_PORT
 	DB_USER=YOUR_USER
 	DB_PASSWORD=YOUR_PASSWORD
