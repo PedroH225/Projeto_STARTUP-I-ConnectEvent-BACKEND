@@ -13,7 +13,7 @@ Para executar o backend do projeto, é necessário a instalação de: NodeJS, NP
   - Abra o terminal do GitBash no diretório desejado e digite os comandos:
    ```bash
    git init
-   git clone git@github.com:VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-BACKEND.git
+   git clone git@github.com:PedroH225/Projeto_STARTUP-I-ConnectEvent-BACKEND.git
    cd ./backend/
   ```
 
@@ -90,7 +90,7 @@ Com isso, o backend de estatísticas estará em funcionamento. A API estará dis
    
 ## **Execute o frontend**:
   - Siga as instruções de execução do frontend:
-    [Link para o frontend](https://github.com/VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-FRONTEND)
+    [Link para o frontend](https://github.com/PedroH225/ProjetoSTARTUP-I-ConnectEvent-FRONTEND.git)
 
 
 ## Uso
