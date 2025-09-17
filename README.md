@@ -1,5 +1,7 @@
 # ConnectEvent Backend
 
+> Read in other languages: [English](README.en.md)
+
 ## Descrição
 A ConnectEvent é uma plataforma digital que possui a finalidade de conectar as pessoas (consumidores) aos eventos de empresários e organizadores.
 
