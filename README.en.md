@@ -13,7 +13,7 @@ To run the project backend, you need to have NodeJS, NPM installed and create th
    git init
    git clone git@github.com:VictorAlexandreMuller/Projeto_STARTUP-I-ConnectEvent-BACKEND.git
    cd ./backend/
-  ```
+   ```
 
 2. **Install dependencies**:
   - In the same terminal, run::
